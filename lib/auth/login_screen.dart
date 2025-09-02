@@ -16,92 +16,94 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 50),
-              Image.asset('assets/loginlogo.png'),
-              SizedBox(height: 70),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 50),
+                Image.asset('assets/loginlogo.png'),
+                SizedBox(height: 70),
 
-              CustomTextFormField(hintText: 'Email', iconPathName: 'mail'),
-              SizedBox(height: 16),
+                CustomTextFormField(hintText: 'Email', iconPathName: 'mail'),
+                SizedBox(height: 16),
 
-              CustomTextFormField(
-                hintText: 'Password',
-                iconPathName: 'password',
-                isPassword: true,
-              ),
-              SizedBox(height: 16),
-
-              Align(
-                alignment: Alignment.centerRight,
-
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text('Forget Password ?'),
+                CustomTextFormField(
+                  hintText: 'Password',
+                  iconPathName: 'password',
+                  isPassword: true,
                 ),
-              ),
-              SizedBox(height: 16),
+                SizedBox(height: 16),
 
-              CustomElevatedButton(
-                textElevatedButton: 'Login',
-                onPressed: () {},
-              ),
-              SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerRight,
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Don’t Have Account ?', style: textTheme.titleSmall),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(
-                        context,
-                      ).pushReplacementNamed(RegisterScreen.routeName);
-                    },
-                    child: Text('Create One'),
+                  child: TextButton(
+                    onPressed: () {},
+                    child: Text('Forget Password ?'),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 16),
 
-              Row(
-                children: [
-                  Expanded(
-                    child: Divider(
-                      thickness: 2,
-                      indent: 50,
-                      color: AppTheme.primary,
+                CustomElevatedButton(
+                  textElevatedButton: 'Login',
+                  onPressed: () {},
+                ),
+                SizedBox(height: 16),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Don’t Have Account ?', style: textTheme.titleSmall),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(
+                          context,
+                        ).pushNamed(RegisterScreen.routeName);
+                      },
+                      child: Text('Create One'),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Text(
-                      'OR',
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 2,
+                        indent: 50,
                         color: AppTheme.primary,
                       ),
                     ),
-                  ),
-
-                  Expanded(
-                    child: Divider(
-                      thickness: 2,
-                      endIndent: 50,
-                      color: AppTheme.primary,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Text(
+                        'OR',
+                        style: Theme.of(context).textTheme.titleMedium!
+                            .copyWith(color: AppTheme.primary),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
 
-              CustomElevatedButton(
-                textElevatedButton: 'Login With Google',
-                onPressed: () {},
-              ),
-              SizedBox(height: 16),
+                    Expanded(
+                      child: Divider(
+                        thickness: 2,
+                        endIndent: 50,
+                        color: AppTheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
 
-              LocalizationSwitch(),
-            ],
+                CustomElevatedButton(
+                  textElevatedButton: 'Login With Google',
+                  onPressed: () {},
+                ),
+                SizedBox(height: 16),
+
+                LocalizationSwitch(),
+              ],
+            ),
           ),
         ),
       ),

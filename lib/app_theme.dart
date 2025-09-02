@@ -13,6 +13,11 @@ class AppTheme {
     scaffoldBackgroundColor: backgroundDark,
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
+    appBarTheme: AppBarTheme(
+      backgroundColor: backgroundDark,
+      foregroundColor: primary,
+      centerTitle: true,
+    ),
 
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: EdgeInsets.all(20),
