@@ -1,76 +1,56 @@
 import 'package:flutter/material.dart';
 
 class LocalizationSwitch extends StatefulWidget {
-  const LocalizationSwitch({super.key});
+  final Function(bool isEnglish)? onChanged; // callback
+
+  const LocalizationSwitch({super.key, this.onChanged});
 
   @override
   State<LocalizationSwitch> createState() => _LocalizationSwitchState();
 }
 
 class _LocalizationSwitchState extends State<LocalizationSwitch> {
-  bool _isArabic = true;
+  bool isEnglish = false;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _isArabic = !_isArabic;
+          isEnglish = !isEnglish;
         });
+        widget.onChanged?.call(isEnglish);
       },
       child: Container(
-        width: 80,
-        height: 40,
+        width: 120,
+        height: 55,
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: _isArabic ? Colors.blue[100] : Colors.red[100],
-          borderRadius: BorderRadius.circular(20),
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(color: Colors.amber, width: 3),
         ),
-        child: Stack(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 200),
-              left: _isArabic ? 40 : 0,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // Egypt flag (left side)
-            Positioned(
-              left: 8,
-              top: 8,
-              child: Image.asset(
-                'assets/EG.png',
-                width: 24,
-                height: 24,
-                color: _isArabic ? Colors.blue : Colors.grey,
-              ),
-            ),
-            // UK flag (right side)
-            Positioned(
-              right: 8,
-              top: 8,
-              child: Image.asset(
-                'assets/LR.png',
-                width: 24,
-                height: 24,
-                color: _isArabic ? Colors.grey : Colors.red,
-              ),
-            ),
+            _flagCircle("assets/LR.png", isEnglish),
+            _flagCircle("assets/Eg.png", !isEnglish),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _flagCircle(String assetPath, bool isSelected) {
+    return Container(
+      width: 45,
+      height: 45,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: isSelected ? Border.all(color: Colors.amber, width: 6) : null,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset(assetPath, fit: BoxFit.fill),
     );
   }
 }
