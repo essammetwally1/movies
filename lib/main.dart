@@ -3,6 +3,7 @@ import 'package:movies/app_theme.dart';
 import 'package:movies/auth/forgot_password.dart';
 import 'package:movies/auth/login_screen.dart';
 import 'package:movies/auth/register_screen.dart';
+import 'package:movies/onbording/onbording.dart';
 import 'package:movies/screens/home_screen.dart';
 import 'package:movies/screens/profile.dart';
 
@@ -21,8 +22,10 @@ class MoviesApp extends StatelessWidget {
         RegisterScreen.routeName: (context) => RegisterScreen(),
         ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
         ProfileUpdateScreen.routeName: (context) => ProfileUpdateScreen(),
+
+        Onbording.routeName: (context) => Onbording(),
       },
-      initialRoute: LoginScreen.routeName,
+      initialRoute: Onbording.routeName,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.dartTheme,
       themeMode: ThemeMode.dark,
