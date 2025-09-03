@@ -6,6 +6,8 @@ import 'package:movies/onbording/onbording_screen.dart';
 class Onbording extends StatefulWidget {
   static const String routeName = "/onboarding";
 
+  const Onbording({super.key});
+
   @override
   State<Onbording> createState() => _OnbordingState();
 }

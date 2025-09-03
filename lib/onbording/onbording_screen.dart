@@ -8,7 +8,8 @@ class OnbordingScreen extends StatelessWidget {
   final VoidCallback? onBack;
   final int index;
 
-  OnbordingScreen({
+  const OnbordingScreen({
+    super.key,
     required this.onbordingData,
     this.onNext,
     this.onBack,
