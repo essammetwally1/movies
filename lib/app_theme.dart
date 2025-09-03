@@ -17,8 +17,11 @@ class AppTheme {
       backgroundColor: backgroundDark,
       foregroundColor: primary,
       centerTitle: true,
+<<<<<<< HEAD
       elevation: 0,
       scrolledUnderElevation: 0,
+=======
+>>>>>>> c4e52f8432fae1d98dc254b5afb696d422df4665
     ),
 
     inputDecorationTheme: InputDecorationTheme(
