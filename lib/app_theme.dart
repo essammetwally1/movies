@@ -4,6 +4,7 @@ class AppTheme {
   static const Color primary = Color(0xFFF6BD00);
   static const Color gray = Color(0xFF282A28);
   static const Color white = Color(0xFFFFFFFF);
+  static const Color black = Color(0xFF282A28);
   static const Color red = Color(0xFFE82626);
   static const Color backgroundDark = Color(0xFF121312);
 
@@ -12,22 +13,30 @@ class AppTheme {
     scaffoldBackgroundColor: backgroundDark,
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
+    appBarTheme: AppBarTheme(
+      backgroundColor: backgroundDark,
+      foregroundColor: primary,
+      centerTitle: true,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+    ),
 
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: EdgeInsets.all(12),
-
+      contentPadding: EdgeInsets.all(20),
+      filled: true,
+      fillColor: gray,
       hintStyle: TextStyle(
         fontSize: 16,
         color: white,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: primary),
+        borderSide: BorderSide(color: gray),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: primary),
+        borderSide: BorderSide(color: white),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
@@ -41,14 +50,14 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       ),
     ),
     textTheme: TextTheme(
       titleLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w400,
-        color: gray,
+        color: black,
       ),
 
       titleMedium: TextStyle(
@@ -59,17 +68,18 @@ class AppTheme {
       titleSmall: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
-        color: primary,
+        color: white,
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
+        overlayColor: Colors.transparent,
+        splashFactory: NoSplash.splashFactory,
         foregroundColor: primary,
         textStyle: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic,
-          decoration: TextDecoration.underline,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          decoration: TextDecoration.none,
         ),
       ),
     ),
