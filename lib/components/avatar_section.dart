@@ -16,6 +16,9 @@ class _AvatarSectionState extends State<AvatarSection> {
     'assets/avatar/avatar4.png',
     'assets/avatar/avatar5.png',
     'assets/avatar/avatar6.png',
+    'assets/avatar/avatar7.png',
+    'assets/avatar/avatar8.png',
+    'assets/avatar/avatar9.png',
   ];
 
   int selectedIndex = 0;

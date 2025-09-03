@@ -1,10 +1,10 @@
-
-
+import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/auth/forgot_password.dart';
 import 'package:movies/auth/login_screen.dart';
 import 'package:movies/auth/register_screen.dart';
 import 'package:movies/screens/home_screen.dart';
+import 'package:movies/screens/profile.dart';
 
 void main() {
   runApp(MoviesApp());
@@ -20,6 +20,7 @@ class MoviesApp extends StatelessWidget {
         LoginScreen.routeName: (context) => LoginScreen(),
         RegisterScreen.routeName: (context) => RegisterScreen(),
         ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
+        ProfileUpdateScreen.routeName: (context) => ProfileUpdateScreen(),
       },
       initialRoute: LoginScreen.routeName,
       theme: AppTheme.lightTheme,

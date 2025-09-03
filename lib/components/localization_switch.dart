@@ -28,7 +28,7 @@ class _LocalizationSwitchState extends State<LocalizationSwitch> {
         decoration: BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.circular(40),
-          border: Border.all(color: Colors.amber, width: 1),
+          border: Border.all(color: Colors.amber, width: 2),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,7 +47,7 @@ class _LocalizationSwitchState extends State<LocalizationSwitch> {
       height: 45,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: isSelected ? Border.all(color: Colors.amber, width: 4) : null,
+        border: isSelected ? Border.all(color: Colors.amber, width: 5) : null,
       ),
       clipBehavior: Clip.antiAlias,
       child: Image.asset(assetPath, fit: BoxFit.fill),
