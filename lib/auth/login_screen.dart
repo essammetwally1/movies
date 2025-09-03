@@ -5,19 +5,14 @@ import 'package:movies/auth/register_screen.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
 import 'package:movies/components/localization_switch.dart';
-<<<<<<< HEAD
+
 import 'package:movies/screens/profile.dart';
-=======
->>>>>>> c4e52f8432fae1d98dc254b5afb696d422df4665
 
 class LoginScreen extends StatelessWidget {
   static const String routeName = '/login';
 
-<<<<<<< HEAD
-=======
   const LoginScreen({super.key});
 
->>>>>>> c4e52f8432fae1d98dc254b5afb696d422df4665
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -59,15 +54,12 @@ class LoginScreen extends StatelessWidget {
 
                 CustomElevatedButton(
                   textElevatedButton: 'Login',
-<<<<<<< HEAD
+
                   onPressed: () {
                     Navigator.of(
                       context,
                     ).pushNamed(ProfileUpdateScreen.routeName);
                   },
-=======
-                  onPressed: () {},
->>>>>>> c4e52f8432fae1d98dc254b5afb696d422df4665
                 ),
                 SizedBox(height: 16),
 
