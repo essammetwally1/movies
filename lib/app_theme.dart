@@ -71,6 +71,8 @@ class AppTheme {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
+        overlayColor: Colors.transparent,
+        splashFactory: NoSplash.splashFactory,
         foregroundColor: primary,
         textStyle: TextStyle(
           fontSize: 14,
