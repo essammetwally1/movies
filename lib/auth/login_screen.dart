@@ -5,6 +5,7 @@ import 'package:movies/auth/register_screen.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
 import 'package:movies/components/localization_switch.dart';
+import 'package:movies/screens/profile.dart';
 
 import 'package:movies/screens/profile.dart';
 

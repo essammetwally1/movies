@@ -23,6 +23,7 @@ class MoviesApp extends StatelessWidget {
         ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
         ProfileUpdateScreen.routeName: (context) => ProfileUpdateScreen(),
         Onbording.routeName: (context) => Onbording(),
+
       },
       initialRoute: Onbording.routeName,
       theme: AppTheme.lightTheme,
