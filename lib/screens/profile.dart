@@ -53,18 +53,18 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                     showModalBottomSheet(
                       backgroundColor: AppTheme.backgroundDark,
                       context: context,
-                      isScrollControlled: true, // Important for top positioning
+
+                      isScrollControlled: true,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(
-                            20,
-                          ), // Changed to bottom for top sheet
+                          bottom: Radius.circular(20),
                         ),
                       ),
                       builder: (context) {
                         return DraggableScrollableSheet(
                           expand: false,
-                          initialChildSize: 0.6, // Adjust height as needed
+
+                          initialChildSize: 0.85,
                           maxChildSize: 0.9,
                           minChildSize: 0.4,
                           builder: (context, scrollController) {

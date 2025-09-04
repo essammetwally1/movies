@@ -145,8 +145,7 @@ class AuthApiService {
       log('Reset password response status: ${response.statusCode}');
       log('Reset password response body: ${response.body}');
 
-      if (response.statusCode == 201) {
-        // Success - handle both cases: with and without response body
+      if (response.statusCode == 200 || response.statusCode == 201) {
         if (response.body.isNotEmpty) {
           final responseData = json.decode(response.body);
           return {
@@ -157,7 +156,6 @@ class AuthApiService {
           return {'message': 'Password reset successfully', 'success': true};
         }
       } else {
-        // Handle different error status codes
         final errorMessage = _handleResetPasswordError(response);
         throw Exception(errorMessage);
       }
@@ -173,7 +171,6 @@ class AuthApiService {
     }
   }
 
-  // Helper method for reset password error handling
   static String _handleResetPasswordError(http.Response response) {
     if (response.body.isNotEmpty) {
       try {
