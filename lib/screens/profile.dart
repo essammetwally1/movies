@@ -61,7 +61,6 @@ class ProfileUpdateScreen extends StatelessWidget {
                 textElevatedButton: 'Update Data',
                 onPressed: () {},
               ),
-              SizedBox(height: 32),
             ],
           ),
         ),

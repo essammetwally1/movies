@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class UserModel {
   final String id;
   final String name;
@@ -27,5 +29,16 @@ class UserModel {
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
     );
+  }
+  void printInfo() {
+    log('--- User Info ---');
+    log('ID: $id');
+    log('Name: $name');
+    log('Email: $email');
+    log('Phone: $phone');
+    log('Avatar ID: $avaterId');
+    log('Created At: $createdAt');
+    log('Updated At: $updatedAt');
+    log('------------------');
   }
 }

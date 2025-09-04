@@ -10,6 +10,7 @@ import 'package:movies/models/user_model.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/profile.dart';
 import 'package:http/http.dart' as http;
+import 'package:movies/utilis.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -198,9 +199,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     };
 
     try {
+      setState(() {
+        isLoading = false;
+      });
       final response = await http.post(
         Uri.parse(apiUrl),
-        headers: <String, String>{'Content-Type': 'application/json'},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
         body: jsonEncode(requestBody),
       );
 
@@ -217,28 +223,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         final errorData = jsonDecode(response.body);
         log('Registration failed: ${errorData['message']}');
-        setState(() {
-          isLoading = false;
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorData['message'] ?? 'Registration failed'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        Utilis.showErrorMessage(errorData['message'] ?? 'Registration failed');
       }
     } catch (error) {
       log('Error during registration: $error');
+      Utilis.showErrorMessage('Network error. Please try again.');
+    } finally {
       setState(() {
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Network error. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
     }
   }
 
@@ -248,9 +241,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         globalKey.currentState!.validate();
         return;
       }
-      setState(() {
-        isLoading = true;
-      });
+
       registerUser();
     }
   }
