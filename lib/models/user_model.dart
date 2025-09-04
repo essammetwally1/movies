@@ -8,6 +8,7 @@ class UserModel {
   final int avaterId;
   final String createdAt;
   final String updatedAt;
+  String? token;
 
   UserModel({
     required this.id,
@@ -17,6 +18,7 @@ class UserModel {
     required this.avaterId,
     required this.createdAt,
     required this.updatedAt,
+    this.token,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class UserModel {
   void printInfo() {
     log('--- User Info ---');
     log('ID: $id');
+    log('Token: $token');
     log('Name: $name');
     log('Email: $email');
     log('Phone: $phone');

@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:movies/auth/api_service.dart';
 import 'package:movies/components/avatar_section.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
@@ -9,7 +8,6 @@ import 'package:movies/components/localization_switch.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/profile.dart';
-import 'package:http/http.dart' as http;
 import 'package:movies/utilis.dart';
 import 'package:provider/provider.dart';
 
@@ -187,47 +185,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> registerUser() async {
-    const String apiUrl = 'https://route-movie-apis.vercel.app/auth/register';
-
-    final Map<String, dynamic> requestBody = {
-      "name": nameController.text,
-      "email": emailController.text,
-      "password": passwordController.text,
-      "confirmPassword": confirmPasswordController.text,
-      "phone": phoneController.text,
-      "avaterId": avatarIndex,
-    };
-
     try {
       setState(() {
-        isLoading = false;
+        isLoading = true;
       });
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(requestBody),
+
+      final registerResult = await AuthApiService.register(
+        name: nameController.text,
+        email: emailController.text,
+        password: passwordController.text,
+        confirmPassword: confirmPasswordController.text,
+        phone: phoneController.text,
+        avatarId: avatarIndex,
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
+      if (registerResult != null && registerResult['success'] == true) {
+        final user = UserModel.fromJson(registerResult['data']);
 
-        log('Registration successful: ${responseData}');
-        final user = UserModel.fromJson(responseData['data']);
         Provider.of<UserProvider>(
           context,
           listen: false,
         ).updateCurrentUser(user);
+
+        Utilis.showSuccessMessage(
+          registerResult['message'] ?? 'Registration successful',
+        );
         Navigator.of(context).pushNamed(ProfileUpdateScreen.routeName);
-      } else {
-        final errorData = jsonDecode(response.body);
-        log('Registration failed: ${errorData['message']}');
-        Utilis.showErrorMessage(errorData['message'] ?? 'Registration failed');
       }
     } catch (error) {
-      log('Error during registration: $error');
-      Utilis.showErrorMessage('Network error. Please try again.');
+      log('Registration error: $error');
+      Utilis.showErrorMessage(error.toString());
     } finally {
       setState(() {
         isLoading = false;
@@ -238,10 +225,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void register() {
     if (globalKey.currentState!.validate()) {
       if (passwordController.text != confirmPasswordController.text) {
-        globalKey.currentState!.validate();
+        Utilis.showErrorMessage('Passwords do not match');
         return;
       }
-
       registerUser();
     }
   }

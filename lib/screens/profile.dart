@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
+import 'package:movies/components/reset_password_bottom_sheet.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class ProfileUpdateScreen extends StatelessWidget {
+class ProfileUpdateScreen extends StatefulWidget {
   static const String routeName = '/profileupdate';
   const ProfileUpdateScreen({super.key});
 
+  @override
+  State<ProfileUpdateScreen> createState() => _ProfileUpdateScreenState();
+}
+
+class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
   @override
   Widget build(BuildContext context) {
     UserModel? userModel = Provider.of<UserProvider>(context).currentUser;
@@ -40,14 +46,29 @@ class ProfileUpdateScreen extends StatelessWidget {
                 iconPathName: 'phone',
               ),
               SizedBox(height: 16),
-
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  'Reset Password',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge!.copyWith(color: AppTheme.white),
+                child: GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      backgroundColor: AppTheme.backgroundDark,
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      builder: (context) {
+                        return ResetPasswordBottomSheet();
+                      },
+                    );
+                  },
+                  child: Text(
+                    'Reset Password',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleLarge!.copyWith(color: AppTheme.white),
+                  ),
                 ),
               ),
               Spacer(),
