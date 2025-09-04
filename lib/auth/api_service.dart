@@ -8,6 +8,7 @@ class AuthApiService {
   static const String loginEndpoint = '/auth/login';
   static const String registerEndpoint = '/auth/register';
   static const String profileEndpoint = '/profile';
+  static const String resetPasswordEndpoint = '/auth/reset-password';
 
   // Login method
   static Future<Map<String, dynamic>?> login({
@@ -115,6 +116,85 @@ class AuthApiService {
     } catch (e) {
       log('Error during registration: $e');
       throw Exception('An unexpected error occurred');
+    }
+  }
+
+  // Reset Password method
+  static Future<Map<String, dynamic>> resetPassword({
+    required String oldPassword,
+    required String newPassword,
+    required String token,
+  }) async {
+    try {
+      final url = Uri.parse('$baseUrl$resetPasswordEndpoint');
+
+      final Map<String, dynamic> requestBody = {
+        'oldPassword': oldPassword,
+        'newPassword': newPassword,
+      };
+
+      final response = await http.patch(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      log('Reset password response status: ${response.statusCode}');
+      log('Reset password response body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        // Success - handle both cases: with and without response body
+        if (response.body.isNotEmpty) {
+          final responseData = json.decode(response.body);
+          return {
+            'message': responseData['message'] ?? 'Password reset successfully',
+            'success': true,
+          };
+        } else {
+          return {'message': 'Password reset successfully', 'success': true};
+        }
+      } else {
+        // Handle different error status codes
+        final errorMessage = _handleResetPasswordError(response);
+        throw Exception(errorMessage);
+      }
+    } on FormatException catch (e) {
+      log('JSON parsing error: $e');
+      throw Exception('Server response format error. Please try again.');
+    } on http.ClientException catch (e) {
+      log('Network error: $e');
+      throw Exception('Network error: ${e.message}');
+    } catch (e) {
+      log('Error during password reset: $e');
+      throw Exception('An unexpected error occurred');
+    }
+  }
+
+  // Helper method for reset password error handling
+  static String _handleResetPasswordError(http.Response response) {
+    if (response.body.isNotEmpty) {
+      try {
+        final responseData = json.decode(response.body);
+        return responseData['message'] ?? 'Failed to reset password';
+      } catch (e) {
+        log('Error parsing error response: $e');
+      }
+    }
+
+    switch (response.statusCode) {
+      case 400:
+        return 'Invalid request data. Please check your input.';
+      case 401:
+        return 'Unauthorized. Your current password is incorrect.';
+      case 403:
+        return 'Forbidden. Invalid or expired token.';
+      case 404:
+        return 'Reset password endpoint not found.';
+      default:
+        return 'Failed to reset password. Please try again.';
     }
   }
 
