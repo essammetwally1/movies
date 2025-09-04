@@ -40,6 +40,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       onTapOutside: (_) {
         FocusManager.instance.primaryFocus!.unfocus();
       },
+
       autovalidateMode: AutovalidateMode.onUserInteraction,
       cursorColor: AppTheme.primary,
       style: Theme.of(context).textTheme.titleMedium,

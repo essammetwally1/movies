@@ -1,9 +1,16 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:movies/components/avatar_section.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
 import 'package:movies/components/localization_switch.dart';
+import 'package:movies/models/user_model.dart';
+import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/profile.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String routeName = '/register';
@@ -19,9 +26,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController =
-      TextEditingController(); // Add this controller
+  TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  int avatarIndex = 1;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -46,7 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               key: globalKey,
               child: Column(
                 children: [
-                  AvatarSection(),
+                  AvatarSection(selectAvatar: selectAvatar),
                   SizedBox(height: 16),
                   CustomTextFormField(
                     controller: nameController,
@@ -87,7 +95,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (value!.isEmpty) {
                         return 'Enter password';
                       } else if (value.length < 9) {
-                        return 'Enter valid password -more than 9 letters-';
+                        return 'Password must be at least 9 characters';
+                      } else if (!RegExp(r'^(?=.*[a-z])').hasMatch(value)) {
+                        return 'Password must contain lowercase letter';
+                      } else if (!RegExp(r'^(?=.*[A-Z])').hasMatch(value)) {
+                        return 'Password must contain uppercase letter';
+                      } else if (!RegExp(r'^(?=.*[0-9])').hasMatch(value)) {
+                        return 'Password must contain number';
+                      } else if (!RegExp(
+                        r'^(?=.*[!@#$%^&*(),.?":{}|<>])',
+                      ).hasMatch(value)) {
+                        return 'Password must contain special character';
                       } else {
                         return null;
                       }
@@ -119,16 +137,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Enter phone number';
-                      } else if (value.length < 11) {
-                        return 'Enter valid phone number';
+                      } else if (!value.startsWith('+2')) {
+                        return 'Phone number must start with +2';
+                      } else if (!RegExp(r'^\+2[0-9]{11}$').hasMatch(value)) {
+                        return 'Enter valid phone number (+2 followed by 11 digits)';
                       } else {
                         return null;
                       }
                     },
                   ),
+
                   SizedBox(height: 16),
 
                   CustomElevatedButton(
+                    isLoading: isLoading,
                     textElevatedButton: 'Create Account',
                     onPressed: register,
                   ),
@@ -159,14 +181,77 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  void selectAvatar(int index) {
+    avatarIndex = index;
+  }
+
+  Future<void> registerUser() async {
+    const String apiUrl = 'https://route-movie-apis.vercel.app/auth/register';
+
+    final Map<String, dynamic> requestBody = {
+      "name": nameController.text,
+      "email": emailController.text,
+      "password": passwordController.text,
+      "confirmPassword": confirmPasswordController.text,
+      "phone": phoneController.text,
+      "avaterId": avatarIndex,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{'Content-Type': 'application/json'},
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+
+        log('Registration successful: ${responseData}');
+        final user = UserModel.fromJson(responseData['data']);
+        Provider.of<UserProvider>(
+          context,
+          listen: false,
+        ).updateCurrentUser(user);
+        Navigator.of(context).pushNamed(ProfileUpdateScreen.routeName);
+      } else {
+        final errorData = jsonDecode(response.body);
+        log('Registration failed: ${errorData['message']}');
+        setState(() {
+          isLoading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorData['message'] ?? 'Registration failed'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (error) {
+      log('Error during registration: $error');
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Network error. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   void register() {
     if (globalKey.currentState!.validate()) {
       if (passwordController.text != confirmPasswordController.text) {
         globalKey.currentState!.validate();
         return;
       }
-
-      Navigator.of(context).pushNamed(ProfileUpdateScreen.routeName);
+      setState(() {
+        isLoading = true;
+      });
+      registerUser();
     }
   }
 }

@@ -4,11 +4,19 @@ import 'package:movies/auth/forgot_password.dart';
 import 'package:movies/auth/login_screen.dart';
 import 'package:movies/auth/register_screen.dart';
 import 'package:movies/onbording/onbording.dart';
+import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/home_screen.dart';
 import 'package:movies/screens/profile.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MoviesApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => UserProvider())],
+
+      child: MoviesApp(),
+    ),
+  );
 }
 
 class MoviesApp extends StatelessWidget {

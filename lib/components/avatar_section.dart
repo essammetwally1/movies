@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 
 class AvatarSection extends StatefulWidget {
-  const AvatarSection({super.key});
+  final Function(int) selectAvatar;
+  const AvatarSection({super.key, required this.selectAvatar});
 
   @override
   State<AvatarSection> createState() => _AvatarSectionState();
@@ -24,7 +25,6 @@ class _AvatarSectionState extends State<AvatarSection> {
   int selectedIndex = 0;
   final PageController _pageController = PageController(viewportFraction: 0.4);
 
-  // Pre-cache images for better performance
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -56,15 +56,16 @@ class _AvatarSectionState extends State<AvatarSection> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // Remove extra space
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            height: 180, // Reduced height
+            height: 180,
             child: PageView.builder(
               controller: _pageController,
               itemCount: avatarImages.length,
               onPageChanged: (index) {
                 setState(() {
+                  widget.selectAvatar(index + 1);
                   selectedIndex = index;
                 });
               },
@@ -88,7 +89,7 @@ class _AvatarSectionState extends State<AvatarSection> {
               },
             ),
           ),
-          const SizedBox(height: 8), // Reduced spacing
+          const SizedBox(height: 8),
           Text(
             'Avatar',
             style: Theme.of(

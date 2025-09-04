@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
+import 'package:movies/models/user_model.dart';
+import 'package:movies/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProfileUpdateScreen extends StatelessWidget {
   static const String routeName = '/profileupdate';
@@ -9,6 +12,7 @@ class ProfileUpdateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserModel? userModel = Provider.of<UserProvider>(context).currentUser;
     return Scaffold(
       appBar: AppBar(title: Text('Pick Avatar')),
       body: SafeArea(
@@ -19,7 +23,7 @@ class ProfileUpdateScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Image.asset(
-                  'assets/avatar/avatar1.png',
+                  'assets/avatar/avatar${userModel!.avaterId}.png',
                   height: 150,
                   width: 150,
                   fit: BoxFit.fill,
@@ -27,12 +31,12 @@ class ProfileUpdateScreen extends StatelessWidget {
               ),
               SizedBox(height: 16),
               CustomTextFormField(
-                hintText: 'User Name',
+                hintText: userModel.name,
                 iconPathName: 'profile',
               ),
               SizedBox(height: 16),
               CustomTextFormField(
-                hintText: '01000000000',
+                hintText: userModel.phone,
                 iconPathName: 'phone',
               ),
               SizedBox(height: 16),
