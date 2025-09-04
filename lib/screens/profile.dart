@@ -53,13 +53,22 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                     showModalBottomSheet(
                       backgroundColor: AppTheme.backgroundDark,
                       context: context,
+                      isScrollControlled: true,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20),
+                          bottom: Radius.circular(20),
                         ),
                       ),
                       builder: (context) {
-                        return ResetPasswordBottomSheet();
+                        return DraggableScrollableSheet(
+                          expand: false,
+                          initialChildSize: 0.85,
+                          maxChildSize: 0.9,
+                          minChildSize: 0.4,
+                          builder: (context, scrollController) {
+                            return ResetPasswordBottomSheet();
+                          },
+                        );
                       },
                     );
                   },
