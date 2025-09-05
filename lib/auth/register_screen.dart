@@ -1,13 +1,13 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:movies/auth/api_service.dart';
+import 'package:movies/auth/login_screen.dart';
 import 'package:movies/components/avatar_section.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
 import 'package:movies/components/localization_switch.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/provider/user_provider.dart';
-import 'package:movies/screens/profile.dart';
 import 'package:movies/utilis.dart';
 import 'package:provider/provider.dart';
 
@@ -210,11 +210,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Utilis.showSuccessMessage(
           registerResult['message'] ?? 'Registration successful',
         );
-        Navigator.of(context).pushNamed(ProfileUpdateScreen.routeName);
+        Navigator.of(context).pushNamed(LoginScreen.routeName);
       }
     } catch (error) {
       log('Registration error: $error');
-      Utilis.showErrorMessage(error.toString());
+      // Utilis.showErrorMessage(error.toString());
     } finally {
       setState(() {
         isLoading = false;
