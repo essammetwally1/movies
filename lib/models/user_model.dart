@@ -32,6 +32,19 @@ class UserModel {
       updatedAt: json['updatedAt'],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'avaterId': avaterId,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      if (token != null) 'token': token,
+    };
+  }
+
   void printInfo() {
     log('--- User Info ---');
     log('ID: $id');

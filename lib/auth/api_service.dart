@@ -241,17 +241,15 @@ class AuthApiService {
     required String password,
   }) async {
     try {
-      // Step 1: Login to get token
       final loginResult = await login(email: email, password: password);
 
       if (loginResult != null && loginResult['success'] == true) {
         final String token = loginResult['token']!;
 
-        // Step 2: Get user profile with the token
         final UserModel? user = await getUserProfile(token);
 
         if (user != null) {
-          user.token = token; // Store token in user object
+          user.token = token;
           return user;
         }
       }
@@ -259,6 +257,82 @@ class AuthApiService {
       return null;
     } catch (e) {
       rethrow;
+    }
+  }
+
+  // update user profile method
+  static Future<Map<String, dynamic>> updateProfile({
+    required UserModel updatedUser,
+  }) async {
+    try {
+      final url = Uri.parse('$baseUrl$profileEndpoint');
+
+      final String? token = updatedUser.token;
+      if (token == null || token.isEmpty) {
+        throw Exception('No authentication token found');
+      }
+
+      final Map<String, dynamic> requestBody = updatedUser.toJson();
+
+      log('Update profile request: ${jsonEncode(requestBody)}');
+
+      final response = await http.patch(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode(requestBody),
+      );
+
+      log('Update profile response status: ${response.statusCode}');
+      log('Update profile response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        return {
+          'message': responseData['message'] ?? 'Profile updated successfully',
+          'success': true,
+        };
+      } else {
+        final errorMessage = _handleUpdateProfileError(response);
+        throw Exception(errorMessage);
+      }
+    } on FormatException catch (e) {
+      log('JSON parsing error: $e');
+      throw Exception('Server response format error. Please try again.');
+    } on http.ClientException catch (e) {
+      log('Network error: $e');
+      throw Exception('Network error: ${e.message}');
+    } catch (e) {
+      log('Error during profile update: $e');
+      throw Exception('An unexpected error occurred');
+    }
+  }
+
+  static String _handleUpdateProfileError(http.Response response) {
+    if (response.body.isNotEmpty) {
+      try {
+        final responseData = json.decode(response.body);
+        return responseData['message'] ?? 'Failed to update profile';
+      } catch (e) {
+        log('Error parsing error response: $e');
+      }
+    }
+
+    switch (response.statusCode) {
+      case 400:
+        return 'Invalid request data. Please check your input.';
+      case 401:
+        return 'Unauthorized. Please login again.';
+      case 403:
+        return 'Forbidden. Invalid or expired token.';
+      case 404:
+        return 'Profile endpoint not found.';
+      case 409:
+        return 'Email already exists. Please use a different email.';
+      default:
+        return 'Failed to update profile. Please try again.';
     }
   }
 }

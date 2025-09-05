@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
+import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/onbording/onbording_data_model.dart';
 
 class OnbordingScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class OnbordingScreen extends StatelessWidget {
             width: double.infinity,
             child: Image.asset(
               "assets/images/${onbordingData.imageBath}.png",
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             ),
           ),
           Align(
@@ -92,23 +93,11 @@ class OnbordingScreen extends StatelessWidget {
   }
 
   Widget _buildMainButton(String text, VoidCallback? onTap) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.primary,
-          foregroundColor: AppTheme.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 14),
-        ),
-        onPressed: onTap,
-        child: Text(
-          text,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-      ),
+    return CustomElevatedButton(
+      textElevatedButton: text,
+      onPressed: () {
+        onTap!();
+      },
     );
   }
 
