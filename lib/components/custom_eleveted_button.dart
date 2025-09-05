@@ -5,17 +5,23 @@ class CustomElevatedButton extends StatelessWidget {
   final String textElevatedButton;
   final VoidCallback onPressed;
   final bool isLoading;
+
+  final Color color;
   const CustomElevatedButton({
     super.key,
     required this.textElevatedButton,
     required this.onPressed,
     this.isLoading = false,
+
+    this.color = AppTheme.primary,
   });
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+
         fixedSize: Size(MediaQuery.sizeOf(context).width, 56),
       ),
       onPressed: onPressed,
