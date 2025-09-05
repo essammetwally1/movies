@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:movies/models/user_model.dart';
+import 'package:movies/utilis.dart';
 
 class AuthApiService {
   static const String baseUrl = 'https://route-movie-apis.vercel.app';
@@ -114,8 +115,9 @@ class AuthApiService {
       log('Network error: $e');
       throw Exception('Network error: ${e.message}');
     } catch (e) {
-      log('Error during registration: $e');
-      throw Exception('An unexpected error occurred');
+      Utilis.showErrorMessage(e.toString());
+
+      throw Exception('An unexpected error : $e');
     }
   }
 
