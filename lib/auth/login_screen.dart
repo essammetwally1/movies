@@ -9,7 +9,7 @@ import 'package:movies/components/custom_text_form_feild.dart';
 import 'package:movies/components/localization_switch.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/provider/user_provider.dart';
-import 'package:movies/screens/profile.dart';
+import 'package:movies/screens/movie_details_screen.dart';
 import 'package:movies/utilis.dart';
 import 'package:provider/provider.dart';
 
@@ -189,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Utilis.showSuccessMessage('Login successful');
         Navigator.of(
           context,
-        ).pushReplacementNamed(ProfileUpdateScreen.routeName);
+        ).pushReplacementNamed(MovieDetailsScreen.routeName);
       }
     } catch (error) {
       log('Login error: $error');
