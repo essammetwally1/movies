@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies/hometab/home_tab.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = '/home';
@@ -6,6 +7,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(body: HomeTab());
   }
 }
