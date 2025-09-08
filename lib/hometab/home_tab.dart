@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/auth/api_service.dart';
 import 'package:movies/hometab/action_view.dart';
+import 'package:movies/models/movie_model.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -11,8 +12,8 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   final PageController _pageController = PageController(viewportFraction: 0.6);
   int selectedIndex = 0;
-  List<dynamic> movies = [];
-  List<dynamic> suggestions = [];
+  List<MovieModel> movies = [];
+  List<MovieModel> suggestions = [];
   bool isLoading = true;
   bool isSuggestionsLoading = false;
 
@@ -31,7 +32,7 @@ class _HomeTabState extends State<HomeTab> {
         isLoading = false;
       });
       if (movies.isNotEmpty) {
-        _loadSuggestions(movies[0]["id"]);
+        _loadSuggestions(movies[0].id);
       }
     } catch (e) {
       if (!mounted) return;
@@ -113,7 +114,7 @@ class _HomeTabState extends State<HomeTab> {
                   Expanded(
                     flex: 3,
                     child: _buildNetworkImage(
-                      movies[selectedIndex]["large_cover_image"],
+                      movies[selectedIndex].mediumCoverImage,
                       width: screenSize.width,
                       fit: BoxFit.cover,
                     ),
@@ -136,6 +137,7 @@ class _HomeTabState extends State<HomeTab> {
                 onPageChanged: (index) {
                   setState(() {
                     selectedIndex = index;
+                    if (movies.isNotEmpty) {}
                   });
                 },
                 itemBuilder: (context, index) {
@@ -162,7 +164,7 @@ class _HomeTabState extends State<HomeTab> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: _buildNetworkImage(
-                                    movie["medium_cover_image"],
+                                    movie.mediumCoverImage,
                                     width: screenSize.width * 0.55,
                                     height: screenSize.height * 0.4,
                                     fit: BoxFit.cover,
@@ -183,7 +185,7 @@ class _HomeTabState extends State<HomeTab> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          movie["rating"]?.toString() ?? "0.0",
+                                          movie.rating.toString(),
                                           style: TextStyle(
                                             color: AppTheme.white,
                                             fontSize: 14,
@@ -227,14 +229,7 @@ class _HomeTabState extends State<HomeTab> {
                 if (isSuggestionsLoading)
                   CircularProgressIndicator(color: AppTheme.primary)
                 else if (suggestions.isNotEmpty)
-                  ActionView(
-                    movieImages: suggestions
-                        .map((m) => m["medium_cover_image"].toString())
-                        .toList(),
-                    movieRatings: suggestions
-                        .map((m) => m["rating"].toString())
-                        .toList(),
-                  ),
+                  ActionView(movies: suggestions),
               ],
             ),
           ),

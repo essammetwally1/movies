@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:movies/models/movie_model.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/utilis.dart';
 
@@ -341,7 +342,7 @@ class AuthApiService {
 class MovieService {
   static const String baseUrl = "https://yts.mx/api/v2/";
 
-  static Future<List<dynamic>> fetchMovies({int page = 1}) async {
+  static Future<List<MovieModel>> fetchMovies({int page = 1}) async {
     try {
       final url = Uri.parse(
         "${baseUrl}list_movies.json?limit=15&page=$page&sort_by=rating",
@@ -359,7 +360,9 @@ class MovieService {
         }
 
         final movies = data["data"]["movies"] as List<dynamic>;
-        return movies;
+        return movies
+            .map((movieJson) => MovieModel.fromJson(movieJson))
+            .toList();
       } else {
         throw HttpException(
           "Failed to fetch movies: Status ${response.statusCode}",
@@ -375,7 +378,7 @@ class MovieService {
     }
   }
 
-  static Future<List<dynamic>> fetchMovieSuggestions(int movieId) async {
+  static Future<List<MovieModel>> fetchMovieSuggestions(int movieId) async {
     try {
       final url = Uri.parse(
         "${baseUrl}movie_suggestions.json?movie_id=$movieId",
@@ -392,19 +395,15 @@ class MovieService {
           return [];
         }
 
-        return data["data"]["movies"] as List<dynamic>;
+        final movies = data["data"]["movies"] as List<dynamic>;
+        return movies
+            .map((movieJson) => MovieModel.fromJson(movieJson))
+            .toList();
       } else {
-        throw HttpException(
-          "Failed to fetch suggestions: Status ${response.statusCode}",
-          uri: url,
-        );
+        throw Exception("Failed to fetch suggestions");
       }
-    } on SocketException {
-      throw Exception("No Internet connection. Please check your network.");
-    } on FormatException {
-      throw Exception("Invalid response format from server.");
     } catch (e) {
-      throw Exception("Unexpected error while fetching suggestions: $e");
+      throw Exception("Error fetching suggestions: $e");
     }
   }
 }
