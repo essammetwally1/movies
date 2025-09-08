@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/hometab/see_more.dart';
+import 'package:movies/models/movie_model.dart';
 
 class ActionView extends StatelessWidget {
-  final List<String> movieImages;
-  final List<String> movieRatings;
+  final List<MovieModel> movies;
 
-  const ActionView({
-    super.key,
-    required this.movieImages,
-    required this.movieRatings,
-  });
+  const ActionView({super.key, required this.movies});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // العنوان + زرار "See More"
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Action",
                   style: TextStyle(
                     fontSize: 20,
@@ -39,7 +36,7 @@ class ActionView extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => SeeMoreScreen()),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     "See More →",
                     style: TextStyle(color: Colors.amber),
                   ),
@@ -48,12 +45,14 @@ class ActionView extends StatelessWidget {
             ),
           ),
 
+          // الأفلام
           SizedBox(
             height: 180,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: movieImages.length,
+              itemCount: movies.length,
               itemBuilder: (context, index) {
+                final movie = movies[index];
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Stack(
@@ -61,14 +60,17 @@ class ActionView extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.network(
-                          movieImages[index],
+                          movie.mediumCoverImage,
                           width: 120,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               Container(
                                 width: 120,
                                 color: Colors.grey,
-                                child: Icon(Icons.error, color: AppTheme.red),
+                                child: const Icon(
+                                  Icons.error,
+                                  color: AppTheme.red,
+                                ),
                               ),
                         ),
                       ),
@@ -76,7 +78,7 @@ class ActionView extends StatelessWidget {
                         top: 8,
                         left: 8,
                         child: Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 6,
                             vertical: 2,
                           ),
@@ -87,15 +89,15 @@ class ActionView extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                movieRatings[index],
+                                movie.rating.toString(),
                                 style: const TextStyle(
                                   color: AppTheme.white,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(width: 2),
-                              Icon(
+                              const SizedBox(width: 2),
+                              const Icon(
                                 Icons.star,
                                 color: AppTheme.primary,
                                 size: 14,

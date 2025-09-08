@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies/auth/api_service.dart';
 import 'package:movies/app_theme.dart';
+import 'package:movies/models/movie_model.dart';
 
 class SeeMoreScreen extends StatefulWidget {
   const SeeMoreScreen({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class SeeMoreScreen extends StatefulWidget {
 }
 
 class _SeeMoreScreenState extends State<SeeMoreScreen> {
-  List<dynamic> movies = [];
+  List<MovieModel> movies = [];
   bool isLoading = true;
   bool isLoadingMore = false;
   int currentPage = 1;
@@ -76,15 +77,15 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
     return Scaffold(
       backgroundColor: AppTheme.black,
       appBar: AppBar(
-        title: Text("All Movies"),
+        title: const Text("All Movies"),
         backgroundColor: AppTheme.black,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : GridView.builder(
               controller: _scrollController,
-              padding: EdgeInsets.all(8),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              padding: const EdgeInsets.all(8),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 0.65,
                 crossAxisSpacing: 10,
@@ -93,7 +94,7 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
               itemCount: movies.length + (isLoadingMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index >= movies.length) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(color: AppTheme.primary),
                   );
                 }
@@ -105,7 +106,7 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
                     fit: StackFit.expand,
                     children: [
                       Image.network(
-                        movie["medium_cover_image"] ?? "",
+                        movie.mediumCoverImage,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Image.network(
@@ -118,7 +119,7 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
                         top: 8,
                         left: 8,
                         child: Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 6,
                             vertical: 4,
                           ),
@@ -129,15 +130,15 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
                           child: Row(
                             children: [
                               Text(
-                                movie["rating"].toString(),
-                                style: TextStyle(
+                                movie.rating.toString(),
+                                style: const TextStyle(
                                   color: AppTheme.white,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(width: 3),
-                              Icon(
+                              const SizedBox(width: 3),
+                              const Icon(
                                 Icons.star,
                                 color: AppTheme.primary,
                                 size: 14,
