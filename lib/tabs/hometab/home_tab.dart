@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/auth/api_service.dart';
-import 'package:movies/hometab/action_view.dart';
+import 'package:movies/tabs/hometab/action_view.dart';
 import 'package:movies/models/movie_model.dart';
 
 class HomeTab extends StatefulWidget {
+  const HomeTab({super.key});
+
   @override
   State<HomeTab> createState() => _HomeTabState();
 }

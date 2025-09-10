@@ -11,15 +11,15 @@ import 'package:movies/provider/user_provider.dart';
 import 'package:movies/utilis.dart';
 import 'package:provider/provider.dart';
 
-class ProfileUpdateScreen extends StatefulWidget {
+class ProfileTap extends StatefulWidget {
   static const String routeName = '/profileupdate';
-  const ProfileUpdateScreen({super.key});
+  const ProfileTap({super.key});
 
   @override
-  State<ProfileUpdateScreen> createState() => _ProfileUpdateScreenState();
+  State<ProfileTap> createState() => _ProfileTapState();
 }
 
-class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
+class _ProfileTapState extends State<ProfileTap> {
   bool seeAvatarSection = false;
   bool isLoading = false;
   late int avatarIndex;
@@ -40,7 +40,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: Image.asset(
-                  'assets/avatar/avatar${userModel!.avaterId}.png',
+                  'assets/avatar/avatar${userModel.avaterId}.png',
                   height: 150,
                   width: 150,
                   fit: BoxFit.fill,

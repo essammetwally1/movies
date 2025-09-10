@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
-import 'package:movies/hometab/see_more.dart';
+import 'package:movies/tabs/hometab/see_more.dart';
 import 'package:movies/models/movie_model.dart';
 
 class ActionView extends StatelessWidget {
