@@ -104,6 +104,7 @@ class _ProfileTapState extends State<ProfileTap> {
                 textElevatedButton: 'Update Data',
                 onPressed: () {},
               ),
+              SizedBox(height: 16),
             ],
           ),
         ),

@@ -10,7 +10,6 @@ import 'package:movies/components/localization_switch.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/home_screen.dart';
-import 'package:movies/tabs/profile_tab.dart';
 import 'package:movies/utilis.dart';
 import 'package:provider/provider.dart';
 
@@ -104,9 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textElevatedButton: 'Login',
                     isLoading: isLoading,
 
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(HomeScreen.routeName);
-                    },
+                    onPressed: login,
                   ),
                   SizedBox(height: 16),
 

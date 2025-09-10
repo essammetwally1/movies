@@ -21,6 +21,13 @@ class AppTheme {
       elevation: 0,
       scrolledUnderElevation: 0,
     ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(color: primary),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      elevation: 0,
+      enableFeedback: false,
+      backgroundColor: gray,
+      type: BottomNavigationBarType.fixed,
+    ),
 
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: EdgeInsets.all(20),
