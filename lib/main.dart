@@ -33,7 +33,7 @@ class MoviesApp extends StatelessWidget {
 
         Onbording.routeName: (context) => Onbording(),
       },
-      initialRoute: LoginScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.dartTheme,
       themeMode: ThemeMode.dark,

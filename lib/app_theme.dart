@@ -14,6 +14,8 @@ class AppTheme {
     scaffoldBackgroundColor: backgroundDark,
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
+    splashFactory: NoSplash.splashFactory,
+
     appBarTheme: AppBarTheme(
       backgroundColor: backgroundDark,
       foregroundColor: primary,

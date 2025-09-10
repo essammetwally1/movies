@@ -46,8 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _currentIndex = index;
               });
             },
-            type: BottomNavigationBarType.fixed,
-            showSelectedLabels: false,
+            showSelectedLabels: true,
             showUnselectedLabels: false,
             items: [
               BottomNavigationBarItem(
