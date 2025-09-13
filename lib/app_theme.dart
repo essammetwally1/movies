@@ -27,7 +27,7 @@ class AppTheme {
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       elevation: 0,
       enableFeedback: false,
-      backgroundColor: gray,
+      backgroundColor: grey,
       type: BottomNavigationBarType.fixed,
     ),
 

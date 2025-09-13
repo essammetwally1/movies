@@ -7,7 +7,7 @@ import 'package:movies/onbording/onbording.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/home_screen.dart';
 import 'package:movies/screens/movie_details_screen.dart';
-import 'package:movies/screens/profile.dart';
+
 import 'package:provider/provider.dart';
 
 void main() {
@@ -32,7 +32,7 @@ class MoviesApp extends StatelessWidget {
         LoginScreen.routeName: (context) => LoginScreen(),
         RegisterScreen.routeName: (context) => RegisterScreen(),
         ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
-        ProfileUpdateScreen.routeName: (context) => ProfileUpdateScreen(),
+
         MovieDetailsScreen.routeName: (context) => MovieDetailsScreen(),
 
         Onbording.routeName: (context) => Onbording(),

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/auth/api_service.dart';
+import 'package:movies/components/avatar_section.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
 import 'package:movies/components/reset_password_bottom_sheet.dart';
@@ -35,78 +36,72 @@ class _ProfileTapState extends State<ProfileTap> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Image.asset(
-                  'assets/avatar/avatar${userModel.avaterId}.png',
-                  height: 150,
-                  width: 150,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              SizedBox(height: 16),
-              CustomTextFormField(
-                hintText: userModel.name,
-                iconPathName: 'profile',
-              ),
-              SizedBox(height: 16),
-              CustomTextFormField(
-                hintText: userModel.phone,
-                iconPathName: 'phone',
-              ),
-              SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: GestureDetector(
+          child: Form(
+            key: globalKey,
+            child: Column(
+              children: [
+                InkWell(
                   onTap: () {
-                    showModalBottomSheet(
-                      backgroundColor: AppTheme.backgroundDark,
-                      context: context,
-
-                      isScrollControlled: true,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(20),
-                        ),
-                      ),
-                      builder: (context) {
-                        return DraggableScrollableSheet(
-                          expand: false,
-
-<<<<<<< HEAD:lib/screens/profile.dart
-                          initialChildSize: 0.85,
-                          maxChildSize: 0.9,
-                          minChildSize: 0.4,
-                          builder: (context, scrollController) {
-                            return ResetPasswordBottomSheet();
-                          },
-                        );
-                      },
-                    );
+                    setState(() {
+                      seeAvatarSection = true;
+                    });
                   },
-                  child: Text(
-                    'Reset Password',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleLarge!.copyWith(color: AppTheme.white),
-                  ),
+                  onDoubleTap: () {
+                    setState(() {
+                      seeAvatarSection = false;
+                    });
+                  },
+                  child: seeAvatarSection
+                      ? AvatarSection(selectAvatar: selectAvatar)
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            'assets/avatar/avatar${userModel.avaterId}.png',
+                            height: 150,
+                            width: 150,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                 ),
-              ),
-              Spacer(),
-              CustomElevatedButton(
-                textElevatedButton: 'Delete Account',
-                onPressed: () {},
-                color: AppTheme.red,
-              ),
-              SizedBox(height: 16),
-              CustomElevatedButton(
-                textElevatedButton: 'Update Data',
-                onPressed: () {},
-              ),
-            ],
-=======
+                SizedBox(height: 16),
+                CustomTextFormField(
+                  hintText: userModel.name,
+                  iconPathName: 'profile',
+                  controller: nameController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Enter Your Name';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                SizedBox(height: 16),
+                CustomTextFormField(
+                  hintText: userModel.phone,
+                  iconPathName: 'phone',
+                  controller: phoneController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Enter phone number';
+                    } else if (!value.startsWith('+2')) {
+                      return 'Phone number must start with +2';
+                    } else if (!RegExp(r'^\+2[0-9]{11}$').hasMatch(value)) {
+                      return 'Enter valid phone number (+2 followed by 11 digits)';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        backgroundColor: AppTheme.backgroundDark,
+                        context: context,
+
                         isScrollControlled: true,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
@@ -138,9 +133,7 @@ class _ProfileTapState extends State<ProfileTap> {
                 Spacer(),
                 CustomElevatedButton(
                   textElevatedButton: 'Delete Account',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: () {},
                   color: AppTheme.red,
                 ),
                 SizedBox(height: 16),
@@ -149,10 +142,8 @@ class _ProfileTapState extends State<ProfileTap> {
                   isLoading: isLoading,
                   onPressed: updateData,
                 ),
-                SizedBox(height: 16),
               ],
             ),
->>>>>>> development:lib/tabs/profile_tab.dart
           ),
         ),
       ),
