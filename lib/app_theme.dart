@@ -14,12 +14,21 @@ class AppTheme {
     scaffoldBackgroundColor: backgroundDark,
     splashColor: Colors.transparent,
     highlightColor: Colors.transparent,
+    splashFactory: NoSplash.splashFactory,
+
     appBarTheme: AppBarTheme(
       backgroundColor: backgroundDark,
       foregroundColor: primary,
       centerTitle: true,
       elevation: 0,
       scrolledUnderElevation: 0,
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(color: primary),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      elevation: 0,
+      enableFeedback: false,
+      backgroundColor: gray,
+      type: BottomNavigationBarType.fixed,
     ),
 
     inputDecorationTheme: InputDecorationTheme(

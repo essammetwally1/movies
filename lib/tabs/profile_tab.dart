@@ -11,15 +11,15 @@ import 'package:movies/provider/user_provider.dart';
 import 'package:movies/utilis.dart';
 import 'package:provider/provider.dart';
 
-class ProfileUpdateScreen extends StatefulWidget {
+class ProfileTap extends StatefulWidget {
   static const String routeName = '/profileupdate';
-  const ProfileUpdateScreen({super.key});
+  const ProfileTap({super.key});
 
   @override
-  State<ProfileUpdateScreen> createState() => _ProfileUpdateScreenState();
+  State<ProfileTap> createState() => _ProfileTapState();
 }
 
-class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
+class _ProfileTapState extends State<ProfileTap> {
   bool seeAvatarSection = false;
   bool isLoading = false;
   late int avatarIndex;
@@ -75,6 +75,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                         return DraggableScrollableSheet(
                           expand: false,
 
+<<<<<<< HEAD:lib/screens/profile.dart
                           initialChildSize: 0.85,
                           maxChildSize: 0.9,
                           minChildSize: 0.4,
@@ -105,6 +106,53 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                 onPressed: () {},
               ),
             ],
+=======
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(20),
+                          ),
+                        ),
+                        builder: (context) {
+                          return DraggableScrollableSheet(
+                            expand: false,
+
+                            initialChildSize: 0.85,
+                            maxChildSize: 0.9,
+                            minChildSize: 0.4,
+                            builder: (context, scrollController) {
+                              return ResetPasswordBottomSheet();
+                            },
+                          );
+                        },
+                      );
+                    },
+                    child: Text(
+                      'Reset Password',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge!.copyWith(color: AppTheme.white),
+                    ),
+                  ),
+                ),
+                Spacer(),
+                CustomElevatedButton(
+                  textElevatedButton: 'Delete Account',
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  color: AppTheme.red,
+                ),
+                SizedBox(height: 16),
+                CustomElevatedButton(
+                  textElevatedButton: 'Update Data',
+                  isLoading: isLoading,
+                  onPressed: updateData,
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
+>>>>>>> development:lib/tabs/profile_tab.dart
           ),
         ),
       ),

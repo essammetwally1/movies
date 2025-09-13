@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:movies/models/movie_model.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/utilis.dart';
 
@@ -333,6 +335,75 @@ class AuthApiService {
         return 'Email already exists. Please use a different email.';
       default:
         return 'Failed to update profile. Please try again.';
+    }
+  }
+}
+
+class MovieService {
+  static const String baseUrl = "https://yts.mx/api/v2/";
+
+  static Future<List<MovieModel>> fetchMovies({int page = 1}) async {
+    try {
+      final url = Uri.parse(
+        "${baseUrl}list_movies.json?limit=15&page=$page&sort_by=rating",
+      );
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data == null ||
+            data["data"] == null ||
+            data["data"]["movies"] == null) {
+          return [];
+        }
+
+        final movies = data["data"]["movies"] as List<dynamic>;
+        return movies
+            .map((movieJson) => MovieModel.fromJson(movieJson))
+            .toList();
+      } else {
+        throw HttpException(
+          "Failed to fetch movies: Status ${response.statusCode}",
+          uri: url,
+        );
+      }
+    } on SocketException {
+      throw Exception("No Internet connection. Please check your network.");
+    } on FormatException {
+      throw Exception("Invalid response format from server.");
+    } catch (e) {
+      throw Exception("Unexpected error while fetching movies: $e");
+    }
+  }
+
+  static Future<List<MovieModel>> fetchMovieSuggestions(int movieId) async {
+    try {
+      final url = Uri.parse(
+        "${baseUrl}movie_suggestions.json?movie_id=$movieId",
+      );
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data == null ||
+            data["data"] == null ||
+            data["data"]["movies"] == null) {
+          return [];
+        }
+
+        final movies = data["data"]["movies"] as List<dynamic>;
+        return movies
+            .map((movieJson) => MovieModel.fromJson(movieJson))
+            .toList();
+      } else {
+        throw Exception("Failed to fetch suggestions");
+      }
+    } catch (e) {
+      throw Exception("Error fetching suggestions: $e");
     }
   }
 }
