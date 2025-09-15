@@ -12,16 +12,13 @@ class MovieShotsSection extends StatelessWidget {
     return Column(
       children: shots.map((shot) {
         return Container(
-          margin: EdgeInsets.only(bottom: 5),
+          margin: EdgeInsets.only(bottom: 7),
           height: MediaQuery.sizeOf(context).height * .2,
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
-              BoxShadow(
-                color: Colors.white.withValues(alpha: .2),
-                blurRadius: 8,
-              ),
+              BoxShadow(color: Colors.white.withOpacity(0.2), blurRadius: 8),
             ],
             image: DecorationImage(image: AssetImage(shot), fit: BoxFit.cover),
           ),

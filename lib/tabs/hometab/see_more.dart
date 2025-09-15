@@ -3,8 +3,10 @@ import 'package:movies/auth/api_service.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/components/image_displayer.dart';
 import 'package:movies/models/movie_model.dart';
+import 'package:movies/screens/movie_details_screen.dart' hide ImageDisplayer;
 
 class SeeMoreScreen extends StatefulWidget {
+  static const String routeName = '/seemorescreen';
   const SeeMoreScreen({Key? key}) : super(key: key);
 
   @override
@@ -101,7 +103,16 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
                 }
 
                 final movie = movies[index];
-                return ImageDisplayer(movie: movie);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      MovieDetailsScreen.routeName,
+                      arguments: movie,
+                    );
+                  },
+                  child: ImageDisplayer(movie: movie),
+                );
               },
             ),
     );
