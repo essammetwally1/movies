@@ -4,48 +4,48 @@ import 'package:movies/app_theme.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/movie_shoots_section.dart';
 import 'package:movies/components/rate_item.dart';
-import 'package:movies/models/character_model.dart';
+import 'package:movies/models/movie_model.dart';
+import 'package:movies/auth/api_service.dart';
 
-class MovieDetailsScreen extends StatelessWidget {
+class MovieDetailsScreen extends StatefulWidget {
   static const String routeName = '/moviedetails';
-  MovieDetailsScreen({super.key});
 
-  final List<Character> characters = [
-    Character(
-      imagePath: 'assets/images/film1.png',
-      characterName: 'Actor Name',
-      characterDescription:
-          'Genius, billionaire, playboy, philanthropist. The iconic Iron Man.',
-    ),
-    Character(
-      imagePath: 'assets/images/film2.png',
-      characterName: 'Actor Name',
-      characterDescription:
-          'Genius, billionaire, playboy, philanthropist. The iconic Iron Man.',
-    ),
-    Character(
-      imagePath: 'assets/images/film3.png',
-      characterName: 'Actor Name',
-      characterDescription:
-          'Genius, billionaire, playboy, philanthropist. The iconic Iron Man.',
-    ),
-    Character(
-      imagePath: 'assets/images/film4.png',
-      characterName: 'Actor Name',
-      characterDescription:
-          'Genius, billionaire, playboy, philanthropist. The iconic Iron Man.',
-    ),
-  ];
-  final List<String> genres = [
-    'Action',
-    'Sci-Fi',
-    'Adventure',
-    'Fantasy',
-    'Horror',
-  ];
+  const MovieDetailsScreen({super.key});
+
+  @override
+  State<MovieDetailsScreen> createState() => _MovieDetailsScreenState();
+}
+
+class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
+  List<MovieModel> similarMovies = [];
+  bool isSimilarLoading = true;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final movie = ModalRoute.of(context)!.settings.arguments as MovieModel;
+    _loadSimilarMovies(movie.id);
+  }
+
+  Future<void> _loadSimilarMovies(int movieId) async {
+    try {
+      final fetched = await MovieService.fetchMovieSuggestions(movieId);
+      if (!mounted) return;
+      setState(() {
+        similarMovies = fetched;
+        isSimilarLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        similarMovies = [];
+        isSimilarLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final movie = ModalRoute.of(context)!.settings.arguments as MovieModel;
     final Size screenSize = MediaQuery.sizeOf(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
 
@@ -56,28 +56,34 @@ class MovieDetailsScreen extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
                   ),
-                  child: Image.asset(
-                    'assets/images/film1.png',
+                  child: Image.network(
+                    movie.image,
                     width: double.infinity,
                     height: screenSize.height * .7,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: AppTheme.white,
+                      height: screenSize.height * .7,
+                      child: Icon(
+                        Icons.broken_image,
+                        color: AppTheme.white,
+                        size: 60,
+                      ),
+                    ),
                   ),
                 ),
-
                 Positioned(
-                  top: 20,
+                  top: 25,
                   right: 20,
                   left: 20,
                   child: Row(
                     children: [
                       InkWell(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
+                        onTap: () => Navigator.of(context).pop(),
                         child: SvgPicture.asset('assets/icons/arrow.svg'),
                       ),
                       const Spacer(),
@@ -88,24 +94,13 @@ class MovieDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                Positioned.fill(
-                  child: Center(
-                    child: Image.asset(
-                      'assets/images/video.png',
-                      width: screenSize.width * .2,
-                      height: screenSize.height * .2,
-                    ),
-                  ),
-                ),
-
                 Positioned(
-                  bottom: 50,
+                  bottom: 15,
                   right: 20,
                   left: 20,
                   child: Center(
                     child: Text(
-                      'Doctor Strange in the Multiverse of Madness',
+                      movie.title,
                       style: textTheme.labelLarge,
                       textAlign: TextAlign.center,
                       maxLines: 2,
@@ -115,37 +110,31 @@ class MovieDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.white.withValues(alpha: .2),
-                          blurRadius: 20,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: CustomElevatedButton(
-                      textElevatedButton: 'Watch',
-                      onPressed: () {},
-                      color: AppTheme.red,
-                      textStyle: textTheme.labelLarge,
-                    ),
+                  CustomElevatedButton(
+                    textElevatedButton: 'Watch',
+                    onPressed: () {},
+                    color: AppTheme.red,
+                    textStyle: textTheme.labelLarge,
                   ),
                   const SizedBox(height: 16),
 
+                  // بيانات سريعة
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      RateItem(iconePath: 'love', rate: '99'),
-                      RateItem(iconePath: 'time', rate: '120'),
-                      RateItem(iconePath: 'star', rate: '10'),
+                      RateItem(iconePath: 'love', rate: movie.id.toString()),
+                      RateItem(iconePath: 'time', rate: "${movie.runtime} min"),
+                      RateItem(
+                        iconePath: 'star',
+                        rate: movie.rating.toString(),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -153,44 +142,55 @@ class MovieDetailsScreen extends StatelessWidget {
                   Text('Screen Shots', style: textTheme.labelLarge),
                   const SizedBox(height: 12),
                   MovieShotsSection(),
+
                   const SizedBox(height: 25),
 
                   Text('Similar', style: textTheme.labelLarge),
-                  SizedBox(
-                    height: (screenSize.height * 0.36 * 2),
-                    child: GridView.count(
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 0.6,
-                      children: List.generate(4, (index) {
-                        return SizedBox(
-                          height: screenSize.height * 0.4,
-                          child: ImageDisplayer(
-                            movieImage: 'assets/images/film${index + 1}.png',
-                          ),
-                        );
-                      }),
+                  const SizedBox(height: 12),
+                  if (isSimilarLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (similarMovies.isEmpty)
+                    const Text("No similar movies found")
+                  else
+                    SizedBox(
+                      height: (screenSize.height * 0.36 * 2),
+                      child: GridView.count(
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 0.6,
+                        children: similarMovies
+                            .map(
+                              (m) => ImageDisplayer(
+                                movieImage: m.image,
+                                rating: m.rating,
+                              ),
+                            )
+                            .toList(),
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 12),
 
                   Text('Summary', style: textTheme.labelLarge),
                   const SizedBox(height: 12),
-                  Text(
-                    'Following the events of Spider-Man No Way Home, Doctor Strange unwittingly casts a forbidden spell that accidentally opens up the multiverse. With help from Wong and Scarlet Witch, Strange confronts various versions of himself as well as teaming up with the young America Chavez while traveling through various realities and working to restore reality as he knows it. Along the way, Strange and his allies realize they must take on a powerful new adversary who seeks to take over the multiverse.—Blazer346',
-                    style: textTheme.titleMedium,
-                  ),
+                  Text(movie.summary, style: textTheme.titleMedium),
                   const SizedBox(height: 20),
 
                   Text('Cast', style: textTheme.labelLarge),
-                  SizedBox(
-                    height: characters.length * 110,
-                    child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: characters.length,
-                      itemBuilder: (context, index) {
+                  const SizedBox(height: 12),
+                  if (movie.cast.isEmpty)
+                    const Text(
+                      "No cast info available",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.red,
+                      ),
+                    )
+                  else
+                    Column(
+                      children: movie.cast.map((geners) {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 12),
                           padding: const EdgeInsets.all(12),
@@ -202,44 +202,38 @@ class MovieDetailsScreen extends StatelessWidget {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
-                                child: Image.asset(
-                                  characters[index].imagePath,
-                                  fit: BoxFit.cover,
+                                child: Image.network(
+                                  geners.imageUrl,
                                   width: 80,
                                   height: 70,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      width: 80,
-                                      height: 70,
-                                      color: Colors.grey[300],
-                                      child: const Icon(
-                                        Icons.error,
-                                        color: Colors.grey,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(
+                                        width: 80,
+                                        height: 70,
+                                        color: Colors.grey[300],
+                                        child: const Icon(
+                                          Icons.error,
+                                          color: Colors.grey,
+                                        ),
                                       ),
-                                    );
-                                  },
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      characters[index].characterName,
+                                      geners.name,
                                       style: textTheme.titleLarge!.copyWith(
                                         color: AppTheme.white,
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 6),
                                     Text(
-                                      characters[index].characterDescription,
+                                      geners.characterName,
                                       style: textTheme.titleSmall,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -247,41 +241,30 @@ class MovieDetailsScreen extends StatelessWidget {
                             ],
                           ),
                         );
-                      },
+                      }).toList(),
                     ),
-                  ),
                   const SizedBox(height: 20),
 
                   Text('Genres', style: textTheme.labelLarge),
                   const SizedBox(height: 12),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(bottom: 20),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 2.0,
-                        ),
-                    itemCount: genres.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        decoration: BoxDecoration(
-                          color: AppTheme.grey,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Text(
-                            genres[index],
-                            style: textTheme.titleMedium,
-                            textAlign: TextAlign.center,
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: movie.genres
+                        .map(
+                          (g) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.grey,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(g, style: textTheme.titleMedium),
                           ),
-                        ),
-                      );
-                    },
+                        )
+                        .toList(),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -296,7 +279,13 @@ class MovieDetailsScreen extends StatelessWidget {
 
 class ImageDisplayer extends StatelessWidget {
   final String movieImage;
-  const ImageDisplayer({super.key, required this.movieImage});
+  final double rating;
+
+  const ImageDisplayer({
+    super.key,
+    required this.movieImage,
+    required this.rating,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -305,7 +294,14 @@ class ImageDisplayer extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(movieImage, fit: BoxFit.fill),
+          Image.network(
+            movieImage,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: AppTheme.white,
+              child: const Icon(Icons.broken_image, color: Colors.white),
+            ),
+          ),
           Positioned(
             top: 8,
             left: 8,
@@ -318,7 +314,7 @@ class ImageDisplayer extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    '9.0',
+                    rating.toString(),
                     style: const TextStyle(
                       color: AppTheme.white,
                       fontSize: 12,

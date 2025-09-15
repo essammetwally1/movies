@@ -15,7 +15,7 @@ class ImageDisplayer extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.network(
-            movie.mediumCoverImage,
+            movie.image,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {
               return Image.network(

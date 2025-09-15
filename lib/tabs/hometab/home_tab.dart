@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/auth/api_service.dart';
+import 'package:movies/screens/movie_details_screen.dart';
 import 'package:movies/tabs/hometab/action_view.dart';
 import 'package:movies/models/movie_model.dart';
 
@@ -116,7 +117,7 @@ class _HomeTabState extends State<HomeTab> {
                   Expanded(
                     flex: 3,
                     child: _buildNetworkImage(
-                      movies[selectedIndex].mediumCoverImage,
+                      movies[selectedIndex].image,
                       width: screenSize.width,
                       fit: BoxFit.cover,
                     ),
@@ -161,50 +162,60 @@ class _HomeTabState extends State<HomeTab> {
                           scale: scale,
                           child: Opacity(
                             opacity: opacity,
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: _buildNetworkImage(
-                                    movie.mediumCoverImage,
-                                    width: screenSize.width * 0.55,
-                                    height: screenSize.height * 0.4,
-                                    fit: BoxFit.cover,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+
+                                  MovieDetailsScreen.routeName,
+                                  arguments: movie,
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: _buildNetworkImage(
+                                      movie.image,
+                                      width: screenSize.width * 0.55,
+                                      height: screenSize.height * 0.4,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                ),
-                                Positioned(
-                                  top: 8,
-                                  left: 8,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppTheme.black,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          movie.rating.toString(),
-                                          style: TextStyle(
-                                            color: AppTheme.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
+                                  Positioned(
+                                    top: 8,
+                                    left: 8,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.black,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            movie.rating.toString(),
+                                            style: TextStyle(
+                                              color: AppTheme.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(width: 4),
-                                        Icon(
-                                          Icons.star,
-                                          color: AppTheme.primary,
-                                          size: 18,
-                                        ),
-                                      ],
+                                          SizedBox(width: 4),
+                                          Icon(
+                                            Icons.star,
+                                            color: AppTheme.primary,
+                                            size: 18,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -221,13 +232,14 @@ class _HomeTabState extends State<HomeTab> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 35),
+                  padding: EdgeInsets.only(bottom: 0),
                   child: Image.asset(
                     "assets/images/watch.png",
                     height: screenSize.height * 0.14,
                     fit: BoxFit.contain,
                   ),
                 ),
+
                 if (isSuggestionsLoading)
                   CircularProgressIndicator(color: AppTheme.primary)
                 else if (suggestions.isNotEmpty)

@@ -406,4 +406,20 @@ class MovieService {
       throw Exception("Error fetching suggestions: $e");
     }
   }
+
+  static Future<MovieModel> fetchMovieDetails(int movieId) async {
+    final url = Uri.parse(
+      "https://yts.mx/api/v2/movie_details.json?movie_id=$movieId&with_images=true&with_cast=true",
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final movieJson = data['data']['movie'];
+      return MovieModel.fromJson(movieJson);
+    } else {
+      throw Exception("Failed to fetch movie details");
+    }
+  }
 }

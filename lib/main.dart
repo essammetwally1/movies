@@ -7,6 +7,7 @@ import 'package:movies/onbording/onbording.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/home_screen.dart';
 import 'package:movies/screens/movie_details_screen.dart';
+import 'package:movies/tabs/hometab/see_more.dart';
 
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,7 @@ class MoviesApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         HomeScreen.routeName: (context) => HomeScreen(),
+        SeeMoreScreen.routeName: (context) => SeeMoreScreen(),
         LoginScreen.routeName: (context) => LoginScreen(),
         RegisterScreen.routeName: (context) => RegisterScreen(),
         ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
@@ -37,7 +39,7 @@ class MoviesApp extends StatelessWidget {
 
         Onbording.routeName: (context) => Onbording(),
       },
-      initialRoute: MovieDetailsScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.dartTheme,
       themeMode: ThemeMode.dark,
