@@ -6,12 +6,14 @@ class CustomElevatedButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
   final Color color;
+  final TextStyle? textStyle;
   const CustomElevatedButton({
     super.key,
     required this.textElevatedButton,
     required this.onPressed,
     this.isLoading = false,
     this.color = AppTheme.primary,
+    this.textStyle,
   });
 
   @override
@@ -30,19 +32,24 @@ class CustomElevatedButton extends StatelessWidget {
               children: [
                 Text(
                   'G',
-                  style: TextTheme.of(context).titleLarge!.copyWith(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style:
+                      textStyle ??
+                      TextTheme.of(context).titleLarge!.copyWith(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 SizedBox(width: 10),
                 Text(
                   textElevatedButton,
-                  style: TextTheme.of(context).titleLarge,
+                  style: textStyle ?? TextTheme.of(context).titleLarge,
                 ),
               ],
             )
-          : Text(textElevatedButton, style: TextTheme.of(context).titleLarge),
+          : Text(
+              textElevatedButton,
+              style: textStyle ?? TextTheme.of(context).titleLarge,
+            ),
     );
   }
 }

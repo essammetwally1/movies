@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static const Color primary = Color(0xFFF6BD00);
-  static const Color gray = Color(0xFF282A28);
+  static const Color grey = Color(0xFF282A28);
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF121312);
   static const Color red = Color(0xFFE82626);
@@ -27,14 +27,14 @@ class AppTheme {
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       elevation: 0,
       enableFeedback: false,
-      backgroundColor: gray,
+      backgroundColor: grey,
       type: BottomNavigationBarType.fixed,
     ),
 
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: EdgeInsets.all(20),
       filled: true,
-      fillColor: gray,
+      fillColor: grey,
       hintStyle: TextStyle(
         fontSize: 16,
         color: white,
@@ -42,7 +42,7 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: gray),
+        borderSide: BorderSide(color: grey),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
@@ -64,6 +64,11 @@ class AppTheme {
       ),
     ),
     textTheme: TextTheme(
+      labelLarge: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: white,
+      ),
       titleLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w400,

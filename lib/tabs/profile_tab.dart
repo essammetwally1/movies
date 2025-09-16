@@ -142,7 +142,6 @@ class _ProfileTapState extends State<ProfileTap> {
                   isLoading: isLoading,
                   onPressed: updateData,
                 ),
-                SizedBox(height: 16),
               ],
             ),
           ),
