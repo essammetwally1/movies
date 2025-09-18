@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/auth/api_service.dart';
 import 'package:movies/components/avatar_section.dart';
@@ -10,6 +11,8 @@ import 'package:movies/components/reset_password_bottom_sheet.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:movies/utilis.dart';
+import 'package:movies/cubit/watchlist_cubit.dart';
+import 'package:movies/models/movie_model.dart';
 import 'package:provider/provider.dart';
 
 class ProfileTap extends StatefulWidget {
@@ -27,123 +30,176 @@ class _ProfileTapState extends State<ProfileTap> {
   GlobalKey<FormState> globalKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     UserModel? userModel = Provider.of<UserProvider>(context).currentUser;
     avatarIndex = userModel!.avaterId;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Pick Avatar')),
+      appBar: AppBar(title: const Text('Profile')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Form(
-            key: globalKey,
-            child: Column(
-              children: [
-                InkWell(
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    seeAvatarSection = true;
+                  });
+                },
+                onDoubleTap: () {
+                  setState(() {
+                    seeAvatarSection = false;
+                  });
+                },
+                child: seeAvatarSection
+                    ? AvatarSection(selectAvatar: selectAvatar)
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset(
+                          'assets/avatar/avatar${userModel.avaterId}.png',
+                          height: 150,
+                          width: 150,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 16),
+              CustomTextFormField(
+                hintText: userModel.name,
+                iconPathName: 'profile',
+                controller: nameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter Your Name';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomTextFormField(
+                hintText: userModel.phone,
+                iconPathName: 'phone',
+                controller: phoneController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter phone number';
+                  } else if (!value.startsWith('+2')) {
+                    return 'Phone number must start with +2';
+                  } else if (!RegExp(r'^\+2[0-9]{11}$').hasMatch(value)) {
+                    return 'Enter valid phone number (+2 followed by 11 digits)';
+                  } else {
+                    return null;
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: GestureDetector(
                   onTap: () {
-                    setState(() {
-                      seeAvatarSection = true;
-                    });
-                  },
-                  onDoubleTap: () {
-                    setState(() {
-                      seeAvatarSection = false;
-                    });
-                  },
-                  child: seeAvatarSection
-                      ? AvatarSection(selectAvatar: selectAvatar)
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            'assets/avatar/avatar${userModel.avaterId}.png',
-                            height: 150,
-                            width: 150,
-                            fit: BoxFit.fill,
-                          ),
+                    showModalBottomSheet(
+                      backgroundColor: AppTheme.backgroundDark,
+                      context: context,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(20),
                         ),
-                ),
-                SizedBox(height: 16),
-                CustomTextFormField(
-                  hintText: userModel.name,
-                  iconPathName: 'profile',
-                  controller: nameController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Enter Your Name';
-                    } else {
-                      return null;
-                    }
+                      ),
+                      builder: (context) {
+                        return DraggableScrollableSheet(
+                          expand: false,
+                          initialChildSize: 0.85,
+                          maxChildSize: 0.9,
+                          minChildSize: 0.4,
+                          builder: (context, scrollController) {
+                            return const ResetPasswordBottomSheet();
+                          },
+                        );
+                      },
+                    );
                   },
+                  child: Text(
+                    'Reset Password',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleLarge!.copyWith(color: AppTheme.white),
+                  ),
                 ),
-                SizedBox(height: 16),
-                CustomTextFormField(
-                  hintText: userModel.phone,
-                  iconPathName: 'phone',
-                  controller: phoneController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Enter phone number';
-                    } else if (!value.startsWith('+2')) {
-                      return 'Phone number must start with +2';
-                    } else if (!RegExp(r'^\+2[0-9]{11}$').hasMatch(value)) {
-                      return 'Enter valid phone number (+2 followed by 11 digits)';
-                    } else {
-                      return null;
-                    }
-                  },
-                ),
-                SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        backgroundColor: AppTheme.backgroundDark,
-                        context: context,
+              ),
+              const SizedBox(height: 20),
 
-                        isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            bottom: Radius.circular(20),
-                          ),
-                        ),
-                        builder: (context) {
-                          return DraggableScrollableSheet(
-                            expand: false,
+              // 👇 هنا هنضيف Section للـ Watchlist
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Watchlist',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: BlocBuilder<WatchlistCubit, List<MovieModel>>(
+                        builder: (context, watchlist) {
+                          if (watchlist.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "No movies in watchlist",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }
 
-                            initialChildSize: 0.85,
-                            maxChildSize: 0.9,
-                            minChildSize: 0.4,
-                            builder: (context, scrollController) {
-                              return ResetPasswordBottomSheet();
+                          return ListView.builder(
+                            itemCount: watchlist.length,
+                            itemBuilder: (context, index) {
+                              final movie = watchlist[index];
+                              return ListTile(
+                                leading: Image.network(
+                                  movie.image,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(
+                                  movie.title,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                trailing: const Icon(
+                                  Icons.bookmark,
+                                  color: Colors.yellow,
+                                ),
+                              );
                             },
                           );
                         },
-                      );
-                    },
-                    child: Text(
-                      'Reset Password',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleLarge!.copyWith(color: AppTheme.white),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                Spacer(),
-                CustomElevatedButton(
-                  textElevatedButton: 'Delete Account',
-                  onPressed: () {},
-                  color: AppTheme.red,
-                ),
-                SizedBox(height: 16),
-                CustomElevatedButton(
-                  textElevatedButton: 'Update Data',
-                  isLoading: isLoading,
-                  onPressed: updateData,
-                ),
-              ],
-            ),
+              ),
+
+              const SizedBox(height: 12),
+              CustomElevatedButton(
+                textElevatedButton: 'Delete Account',
+                onPressed: () {},
+                color: AppTheme.red,
+              ),
+              const SizedBox(height: 16),
+              CustomElevatedButton(
+                textElevatedButton: 'Update Data',
+                isLoading: isLoading,
+                onPressed: updateData,
+              ),
+            ],
           ),
         ),
       ),
@@ -191,7 +247,6 @@ class _ProfileTapState extends State<ProfileTap> {
           updateResult['message'] ?? 'Profile updated successfully',
         );
 
-        // Navigator.pop(context);
         setState(() {
           seeAvatarSection = false;
         });

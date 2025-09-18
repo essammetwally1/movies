@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/movie_shoots_section.dart';
 import 'package:movies/components/rate_item.dart';
 import 'package:movies/models/movie_model.dart';
 import 'package:movies/auth/api_service.dart';
+import 'package:movies/cubit/watchlist_cubit.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   static const String routeName = '/moviedetails';
@@ -56,7 +58,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(25),
                     bottomRight: Radius.circular(25),
                   ),
@@ -68,7 +70,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: AppTheme.white,
                       height: screenSize.height * .7,
-                      child: Icon(
+                      child: const Icon(
                         Icons.broken_image,
                         color: AppTheme.white,
                         size: 60,
@@ -87,9 +89,24 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                         child: SvgPicture.asset('assets/icons/arrow.svg'),
                       ),
                       const Spacer(),
-                      InkWell(
-                        onTap: () {},
-                        child: SvgPicture.asset('assets/icons/save.svg'),
+                      // 🔽 Save Button
+                      BlocBuilder<WatchlistCubit, List<MovieModel>>(
+                        builder: (context, watchlist) {
+                          final isSaved = context
+                              .watch<WatchlistCubit>()
+                              .isInWatchlist(movie);
+
+                          return IconButton(
+                            icon: Icon(
+                              isSaved ? Icons.bookmark : Icons.bookmark_border,
+                              color: isSaved ? Color(0xFFF6BD00) : Colors.white,
+                              size: 28,
+                            ),
+                            onPressed: () {
+                              context.read<WatchlistCubit>().toggleMovie(movie);
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),
