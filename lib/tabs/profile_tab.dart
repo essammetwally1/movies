@@ -1,62 +1,102 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/auth/api_service.dart';
+import 'package:movies/components/avatar_section.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
 import 'package:movies/components/custom_text_form_feild.dart';
 import 'package:movies/components/reset_password_bottom_sheet.dart';
 import 'package:movies/models/user_model.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:movies/utilis.dart';
+import 'package:movies/cubit/watchlist_cubit.dart';
+import 'package:movies/models/movie_model.dart';
 import 'package:provider/provider.dart';
 
-class ProfileUpdateScreen extends StatefulWidget {
+class ProfileTap extends StatefulWidget {
   static const String routeName = '/profileupdate';
-  const ProfileUpdateScreen({super.key});
+  const ProfileTap({super.key});
 
   @override
-  State<ProfileUpdateScreen> createState() => _ProfileUpdateScreenState();
+  State<ProfileTap> createState() => _ProfileTapState();
 }
 
-class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
+class _ProfileTapState extends State<ProfileTap> {
   bool seeAvatarSection = false;
   bool isLoading = false;
   late int avatarIndex;
   GlobalKey<FormState> globalKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     UserModel? userModel = Provider.of<UserProvider>(context).currentUser;
     avatarIndex = userModel!.avaterId;
+
     return Scaffold(
-      appBar: AppBar(title: Text('Pick Avatar')),
+      appBar: AppBar(title: const Text('Profile')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Image.asset(
-                  'assets/avatar/avatar${userModel!.avaterId}.png',
-                  height: 150,
-                  width: 150,
-                  fit: BoxFit.fill,
-                ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    seeAvatarSection = true;
+                  });
+                },
+                onDoubleTap: () {
+                  setState(() {
+                    seeAvatarSection = false;
+                  });
+                },
+                child: seeAvatarSection
+                    ? AvatarSection(selectAvatar: selectAvatar)
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.asset(
+                          'assets/avatar/avatar${userModel.avaterId}.png',
+                          height: 150,
+                          width: 150,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               CustomTextFormField(
                 hintText: userModel.name,
                 iconPathName: 'profile',
+                controller: nameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter Your Name';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               CustomTextFormField(
                 hintText: userModel.phone,
                 iconPathName: 'phone',
+                controller: phoneController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Enter phone number';
+                  } else if (!value.startsWith('+2')) {
+                    return 'Phone number must start with +2';
+                  } else if (!RegExp(r'^\+2[0-9]{11}$').hasMatch(value)) {
+                    return 'Enter valid phone number (+2 followed by 11 digits)';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Align(
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
@@ -64,7 +104,6 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                     showModalBottomSheet(
                       backgroundColor: AppTheme.backgroundDark,
                       context: context,
-
                       isScrollControlled: true,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(
@@ -74,12 +113,11 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                       builder: (context) {
                         return DraggableScrollableSheet(
                           expand: false,
-
                           initialChildSize: 0.85,
                           maxChildSize: 0.9,
                           minChildSize: 0.4,
                           builder: (context, scrollController) {
-                            return ResetPasswordBottomSheet();
+                            return const ResetPasswordBottomSheet();
                           },
                         );
                       },
@@ -93,16 +131,73 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                   ),
                 ),
               ),
-              Spacer(),
+              const SizedBox(height: 20),
+
+              // 👇 هنا هنضيف Section للـ Watchlist
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Watchlist',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: BlocBuilder<WatchlistCubit, List<MovieModel>>(
+                        builder: (context, watchlist) {
+                          if (watchlist.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "No movies in watchlist",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }
+
+                          return ListView.builder(
+                            itemCount: watchlist.length,
+                            itemBuilder: (context, index) {
+                              final movie = watchlist[index];
+                              return ListTile(
+                                leading: Image.network(
+                                  movie.image,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(
+                                  movie.title,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                trailing: const Icon(
+                                  Icons.bookmark,
+                                  color: Colors.yellow,
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 12),
               CustomElevatedButton(
                 textElevatedButton: 'Delete Account',
                 onPressed: () {},
                 color: AppTheme.red,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               CustomElevatedButton(
                 textElevatedButton: 'Update Data',
-                onPressed: () {},
+                isLoading: isLoading,
+                onPressed: updateData,
               ),
             ],
           ),
@@ -152,7 +247,6 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
           updateResult['message'] ?? 'Profile updated successfully',
         );
 
-        // Navigator.pop(context);
         setState(() {
           seeAvatarSection = false;
         });

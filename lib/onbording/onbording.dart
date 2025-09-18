@@ -73,7 +73,7 @@ class _OnbordingState extends State<Onbording> {
                   decoration: BoxDecoration(
                     color: currentIndex == index
                         ? AppTheme.primary
-                        : AppTheme.gray,
+                        : AppTheme.grey,
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
