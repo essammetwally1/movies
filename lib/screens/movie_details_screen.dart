@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/components/custom_eleveted_button.dart';
+import 'package:movies/components/image_displayer.dart';
 import 'package:movies/components/movie_shoots_section.dart';
 import 'package:movies/components/rate_item.dart';
 import 'package:movies/models/movie_model.dart';
@@ -125,7 +126,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // بيانات سريعة
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -146,7 +146,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                   const SizedBox(height: 25),
 
                   Text('Similar', style: textTheme.labelLarge),
-                  const SizedBox(height: 12),
                   if (isSimilarLoading)
                     const Center(child: CircularProgressIndicator())
                   else if (similarMovies.isEmpty)
@@ -162,9 +161,21 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                         childAspectRatio: 0.6,
                         children: similarMovies
                             .map(
-                              (m) => ImageDisplayer(
-                                movieImage: m.image,
-                                rating: m.rating,
+                              (m) => InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return MovieDetailsScreen();
+                                      },
+                                      settings: RouteSettings(arguments: m),
+                                    ),
+                                  );
+                                },
+                                child: ImageDisplayer(
+                                  movieImage: m.image,
+                                  rating: m.rating,
+                                ),
                               ),
                             )
                             .toList(),
@@ -272,62 +283,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ImageDisplayer extends StatelessWidget {
-  final String movieImage;
-  final double rating;
-
-  const ImageDisplayer({
-    super.key,
-    required this.movieImage,
-    required this.rating,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.network(
-            movieImage,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              color: AppTheme.white,
-              child: const Icon(Icons.broken_image, color: Colors.white),
-            ),
-          ),
-          Positioned(
-            top: 8,
-            left: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppTheme.black,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    rating.toString(),
-                    style: const TextStyle(
-                      color: AppTheme.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(width: 3),
-                  const Icon(Icons.star, color: AppTheme.primary, size: 14),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

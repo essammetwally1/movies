@@ -3,7 +3,7 @@ import 'package:movies/auth/api_service.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/components/image_displayer.dart';
 import 'package:movies/models/movie_model.dart';
-import 'package:movies/screens/movie_details_screen.dart' hide ImageDisplayer;
+import 'package:movies/screens/movie_details_screen.dart';
 
 class SeeMoreScreen extends StatefulWidget {
   static const String routeName = '/seemorescreen';
@@ -111,7 +111,10 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
                       arguments: movie,
                     );
                   },
-                  child: ImageDisplayer(movie: movie),
+                  child: ImageDisplayer(
+                    movieImage: movie.image,
+                    rating: movie.rating,
+                  ),
                 );
               },
             ),
