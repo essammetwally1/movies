@@ -28,7 +28,10 @@ class RateItem extends StatelessWidget {
           Flexible(
             child: Text(
               rate,
-              style: Theme.of(context).textTheme.labelLarge,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: AppTheme.white,
+                fontWeight: FontWeight.bold,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),

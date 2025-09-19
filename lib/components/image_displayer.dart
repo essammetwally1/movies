@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:movies/app_theme.dart';
-import 'package:movies/models/movie_model.dart';
 
 class ImageDisplayer extends StatelessWidget {
-  const ImageDisplayer({super.key, required this.movie});
+  final String movieImage;
+  final double rating;
 
-  final MovieModel movie;
+  const ImageDisplayer({
+    super.key,
+    required this.movieImage,
+    required this.rating,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +19,12 @@ class ImageDisplayer extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.network(
-            movie.image,
+            movieImage,
             fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.network(
-                "https://static.vecteezy.com/system/resources/previews/022/059/000/original/no-image-available-icon-vector.jpg",
-                fit: BoxFit.cover,
-              );
-            },
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: AppTheme.white,
+              child: const Icon(Icons.broken_image, color: Colors.white),
+            ),
           ),
           Positioned(
             top: 8,
@@ -36,7 +38,7 @@ class ImageDisplayer extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    movie.rating.toString(),
+                    rating.toString(),
                     style: const TextStyle(
                       color: AppTheme.white,
                       fontSize: 12,
