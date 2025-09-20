@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies/components/navbar_icon.dart';
 import 'package:movies/tabs/hometab/home_tab.dart';
-import 'package:movies/tabs/profile_tab.dart';
+import 'package:movies/tabs/profiletab/profile_tab.dart';
 
 import '../tabs/search_tab.dart';
 import '../tabs/browse_tab.dart';
@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     HomeTab(),
     SearchTab(),
     BrowseTab(),
-    ProfileTap(),
+    ProfileTab(),
   ];
 
   @override
