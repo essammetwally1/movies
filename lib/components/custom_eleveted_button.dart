@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:movies/app_theme.dart';
 
 class CustomElevatedButton extends StatelessWidget {
-  final String textElevatedButton;
+  final String? textElevatedButton;
+  final String? iconPath;
   final VoidCallback onPressed;
   final bool isLoading;
   final Color color;
   final TextStyle? textStyle;
   const CustomElevatedButton({
     super.key,
-    required this.textElevatedButton,
+    this.textElevatedButton,
     required this.onPressed,
     this.isLoading = false,
     this.color = AppTheme.primary,
     this.textStyle,
+    this.iconPath,
   });
 
   @override
@@ -26,6 +29,8 @@ class CustomElevatedButton extends StatelessWidget {
       onPressed: onPressed,
       child: isLoading
           ? Center(child: CircularProgressIndicator(color: AppTheme.white))
+          : textElevatedButton == null
+          ? SvgPicture.asset('assets/icons/${iconPath}.svg')
           : textElevatedButton == 'Login With Google'
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -41,13 +46,13 @@ class CustomElevatedButton extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 Text(
-                  textElevatedButton,
+                  textElevatedButton!,
                   style: textStyle ?? TextTheme.of(context).titleLarge,
                 ),
               ],
             )
           : Text(
-              textElevatedButton,
+              textElevatedButton!,
               style: textStyle ?? TextTheme.of(context).titleLarge,
             ),
     );
