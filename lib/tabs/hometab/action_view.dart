@@ -17,7 +17,6 @@ class ActionView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // العنوان وزرار See More
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -28,7 +27,7 @@ class ActionView extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppTheme.white,
                   ),
                 ),
                 TextButton(
@@ -41,14 +40,13 @@ class ActionView extends StatelessWidget {
                   },
                   child: const Text(
                     "See More →",
-                    style: TextStyle(color: Colors.amber),
+                    style: TextStyle(color: AppTheme.primary),
                   ),
                 ),
               ],
             ),
           ),
 
-          // عرض الأفلام أفقياً
           SizedBox(
             height: 150,
             child: ListView.builder(
