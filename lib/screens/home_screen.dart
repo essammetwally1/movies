@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:movies/components/navbar_icon.dart';
+import 'package:movies/tabs/browsetab/browse_tab.dart';
 import 'package:movies/tabs/hometab/home_tab.dart';
 import 'package:movies/tabs/profile_tab.dart';
 
 import '../tabs/search_tab.dart';
-import '../tabs/browse_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
@@ -18,11 +18,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> tabs = const [
-    HomeTab(),
-    SearchTab(),
+  final List<Widget> tabs = [
+    const HomeTab(),
+    const SearchTab(),
     BrowseTab(),
-    ProfileTap(),
+    const ProfileTap(),
   ];
 
   @override
