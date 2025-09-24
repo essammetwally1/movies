@@ -422,4 +422,83 @@ class MovieService {
       throw Exception("Failed to fetch movie details");
     }
   }
+
+  static Future<List<MovieModel>> fetchMoviesByGenre(
+    String genre, {
+    int page = 1,
+  }) async {
+    try {
+      final url = Uri.parse(
+        "${baseUrl}list_movies.json?limit=20&page=$page&genre=$genre&sort_by=year",
+      );
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data == null ||
+            data["data"] == null ||
+            data["data"]["movies"] == null) {
+          return [];
+        }
+
+        final movies = data["data"]["movies"] as List<dynamic>;
+        return movies
+            .map((movieJson) => MovieModel.fromJson(movieJson))
+            .toList();
+      } else {
+        throw HttpException(
+          "Failed to fetch movies by genre: Status ${response.statusCode}",
+          uri: url,
+        );
+      }
+    } on SocketException {
+      throw Exception("No Internet connection. Please check your network.");
+    } on FormatException {
+      throw Exception("Invalid response format from server.");
+    } catch (e) {
+      throw Exception("Unexpected error while fetching movies by genre: $e");
+    }
+  }
+
+  // Search movies by query
+  static Future<List<MovieModel>> searchMovies(
+    String query, {
+    int page = 1,
+  }) async {
+    try {
+      final url = Uri.parse(
+        "${baseUrl}list_movies.json?query_term=$query&page=$page&limit=20",
+      );
+
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data == null ||
+            data["data"] == null ||
+            data["data"]["movies"] == null) {
+          return [];
+        }
+
+        final movies = data["data"]["movies"] as List<dynamic>;
+        return movies
+            .map((movieJson) => MovieModel.fromJson(movieJson))
+            .toList();
+      } else {
+        throw HttpException(
+          "Failed to search movies: Status ${response.statusCode}",
+          uri: url,
+        );
+      }
+    } on SocketException {
+      throw Exception("No Internet connection. Please check your network.");
+    } on FormatException {
+      throw Exception("Invalid response format from server.");
+    } catch (e) {
+      throw Exception("Unexpected error while searching movies: $e");
+    }
+  }
 }
