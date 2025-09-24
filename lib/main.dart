@@ -8,7 +8,6 @@ import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/home_screen.dart';
 import 'package:movies/screens/movie_details_screen.dart';
 import 'package:movies/tabs/hometab/see_more.dart';
-import 'package:movies/tabs/search_tab.dart';
 
 import 'package:provider/provider.dart';
 
@@ -36,7 +35,6 @@ class MoviesApp extends StatelessWidget {
         ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
         MovieDetailsScreen.routeName: (context) => MovieDetailsScreen(),
         Onbording.routeName: (context) => Onbording(),
-        "/search": (context) => const SearchTab(), // ⬅️ ضيفت الروت
       },
       initialRoute: HomeScreen.routeName,
       theme: AppTheme.lightTheme,
