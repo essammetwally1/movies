@@ -39,7 +39,7 @@ class ProfileTab extends StatelessWidget {
                               borderRadius: BorderRadius.circular(50),
                               child: Image.asset(
                                 'assets/avatar/avatar${userProvider.currentUser!.avaterId}.png',
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fill,
                                 height: size.width * 0.3,
                                 width: size.width * 0.3,
                               ),

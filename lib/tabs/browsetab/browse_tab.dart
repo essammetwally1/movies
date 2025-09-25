@@ -5,6 +5,8 @@ import 'package:movies/models/movie_model.dart';
 import 'package:movies/auth/api_service.dart';
 
 class BrowseTab extends StatefulWidget {
+  const BrowseTab({super.key});
+
   @override
   State<BrowseTab> createState() => _BrowseTabState();
 }
@@ -125,7 +127,7 @@ class _BrowseTabState extends State<BrowseTab> {
                                   vertical: 2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppTheme.black.withOpacity(0.7),
+                                  color: AppTheme.black.withValues(alpha: 0.7),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(

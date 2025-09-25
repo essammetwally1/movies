@@ -30,7 +30,7 @@ class CustomElevatedButton extends StatelessWidget {
       child: isLoading
           ? Center(child: CircularProgressIndicator(color: AppTheme.white))
           : textElevatedButton == null
-          ? SvgPicture.asset('assets/icons/${iconPath}.svg')
+          ? SvgPicture.asset('assets/icons/$iconPath.svg')
           : textElevatedButton == 'Login With Google'
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,

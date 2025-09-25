@@ -22,8 +22,8 @@ class ImageDisplayer extends StatelessWidget {
             movieImage,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(
-              color: AppTheme.white,
-              child: const Icon(Icons.broken_image, color: Colors.white),
+              color: AppTheme.grey.withValues(alpha: 0.3),
+              child: Icon(Icons.broken_image, color: AppTheme.white, size: 40),
             ),
           ),
           Positioned(
@@ -32,21 +32,22 @@ class ImageDisplayer extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
               decoration: BoxDecoration(
-                color: AppTheme.black,
+                color: AppTheme.black.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    rating.toString(),
-                    style: const TextStyle(
+                    rating.toStringAsFixed(1),
+                    style: TextStyle(
                       color: AppTheme.white,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(width: 3),
-                  const Icon(Icons.star, color: AppTheme.primary, size: 14),
+                  Icon(Icons.star, color: AppTheme.yellow, size: 14),
                 ],
               ),
             ),

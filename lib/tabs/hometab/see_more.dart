@@ -7,7 +7,7 @@ import 'package:movies/screens/movie_details_screen.dart';
 
 class SeeMoreScreen extends StatefulWidget {
   static const String routeName = '/seemorescreen';
-  const SeeMoreScreen({Key? key}) : super(key: key);
+  const SeeMoreScreen({super.key});
 
   @override
   State<SeeMoreScreen> createState() => _SeeMoreScreenState();
@@ -46,7 +46,6 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
         hasMore = fetchedMovies.isNotEmpty;
       });
     } catch (e) {
-      print("Error: $e");
       setState(() {
         isLoading = false;
       });
@@ -68,7 +67,6 @@ class _SeeMoreScreenState extends State<SeeMoreScreen> {
         hasMore = fetchedMovies.isNotEmpty;
       });
     } catch (e) {
-      print("Error loading more: $e");
       setState(() {
         isLoadingMore = false;
       });

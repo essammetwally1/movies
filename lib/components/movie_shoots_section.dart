@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class MovieShotsSection extends StatelessWidget {
-  final List<String> shots = [
+  final List<String> shots = const [
     'assets/images/shot1.png',
     'assets/images/shot2.png',
     'assets/images/shot3.png',
   ];
+
+  const MovieShotsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,10 @@ class MovieShotsSection extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
-              BoxShadow(color: Colors.white.withOpacity(0.2), blurRadius: 8),
+              BoxShadow(
+                color: Colors.white.withValues(alpha: 0.2),
+                blurRadius: 8,
+              ),
             ],
             image: DecorationImage(image: AssetImage(shot), fit: BoxFit.cover),
           ),

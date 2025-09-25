@@ -9,6 +9,7 @@ class TabItem extends StatelessWidget {
   final Color unselectedForegroundColor;
 
   const TabItem({
+    super.key,
     required this.isSelected,
     required this.label,
     required this.selectedForegroundColor,

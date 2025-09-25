@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies/app_theme.dart';
 import 'package:movies/auth/forgot_password.dart';
 import 'package:movies/auth/login_screen.dart';
 import 'package:movies/auth/register_screen.dart';
+import 'package:movies/cubit/watchlist_cubit.dart';
 import 'package:movies/onbording/onbording.dart';
 import 'package:movies/provider/user_provider.dart';
 import 'package:movies/screens/home_screen.dart';
@@ -15,7 +17,10 @@ void main() {
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (context) => UserProvider())],
-      child: MoviesApp(),
+      child: MultiBlocProvider(
+        providers: [BlocProvider(create: (context) => WatchlistCubit())],
+        child: const MoviesApp(),
+      ),
     ),
   );
 }
@@ -36,7 +41,7 @@ class MoviesApp extends StatelessWidget {
         MovieDetailsScreen.routeName: (context) => MovieDetailsScreen(),
         Onbording.routeName: (context) => Onbording(),
       },
-      initialRoute: HomeScreen.routeName,
+      initialRoute: LoginScreen.routeName,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.dartTheme,
       themeMode: ThemeMode.dark,

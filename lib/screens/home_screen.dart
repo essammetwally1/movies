@@ -4,7 +4,7 @@ import 'package:movies/tabs/browsetab/browse_tab.dart';
 import 'package:movies/tabs/hometab/home_tab.dart';
 import 'package:movies/tabs/profiletab/profile_tab.dart';
 
-import '../tabs/search_tab.dart';
+import '../tabs/searchtab/search_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> tabs = [
     const HomeTab(),
-    const SearchTab(),
+    SearchTab(),
     BrowseTab(),
     const ProfileTab(),
   ];
